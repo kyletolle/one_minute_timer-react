@@ -1,8 +1,5 @@
-import React, { ChangeEvent, ButtonHTMLAttributes, MouseEventHandler } from 'react';
-import logo from './logo.svg';
+import React, { ChangeEvent, MouseEventHandler } from 'react';
 import './App.css';
-import { render } from '@testing-library/react';
-import { stringify } from 'querystring';
 
 // Found this at https://stackoverflow.com/a/14639219/249218
 type EventCallback = (e: ChangeEvent<HTMLInputElement>) => void;
