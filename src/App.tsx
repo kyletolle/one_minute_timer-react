@@ -108,13 +108,11 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   tick() {
-    let minutes = Math.floor(this.secondsRemaining / 60)
+    let minutes = Math.floor(this.secondsRemaining / 60);
     let seconds = this.secondsRemaining - (minutes * 60);
 
     if (minutes === 0 && seconds === 0) {
-      if (this.intervalHandle != null) {
-        clearInterval(this.intervalHandle);
-      }
+      this.stopTimer();
     }
 
     // String conversion comes from https://stackoverflow.com/a/32607656/249218
@@ -142,6 +140,12 @@ class App extends React.Component<AppProps, AppState> {
     let time = Number(this.state.minutes);
 
     this.secondsRemaining = time * 60;
+  }
+
+  private stopTimer() {
+    if (this.intervalHandle != null) {
+      clearInterval(this.intervalHandle);
+    }
   }
 
   render() {
