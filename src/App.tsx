@@ -60,6 +60,20 @@ class StartButton extends React.Component<StartButtonProps> {
   }
 }
 
+export interface StopButtonProps {
+  handleClick: MouseEventHandler<HTMLButtonElement>
+}
+
+class StopButton extends React.Component<StopButtonProps> {
+  render() {
+    return(
+      <div>
+        <button onClick={this.props.handleClick}>Stop</button>
+      </div>
+    )
+  }
+}
+
 export interface AppProps { }
 export interface AppState {
   seconds: string,
@@ -85,6 +99,7 @@ class App extends React.Component<AppProps, AppState> {
 
     this.handleChange = this.handleChange.bind(this);
     this.startCountDown = this.startCountDown.bind(this);
+    this.stopCountDown = this.stopCountDown.bind(this);
     this.tick = this.tick.bind(this);
   }
 
@@ -142,6 +157,11 @@ class App extends React.Component<AppProps, AppState> {
     this.secondsRemaining = time * 60;
   }
 
+  stopCountDown() {
+    this.stopTimer();
+    this.setState(this.INITIAL_STATE);
+  }
+
   private stopTimer() {
     if (this.intervalHandle != null) {
       clearInterval(this.intervalHandle);
@@ -153,7 +173,10 @@ class App extends React.Component<AppProps, AppState> {
       <div className="App">
         <TimerInput minutes={this.state.minutes} handleChange={this.handleChange} />
         <Timer minutes={this.state.minutes} seconds={this.state.seconds} />
-        <StartButton handleClick={this.startCountDown} />
+        <div>
+          <StartButton handleClick={this.startCountDown} />
+          <StopButton handleClick={this.stopCountDown} />
+        </div>
       </div>
     );
   }
