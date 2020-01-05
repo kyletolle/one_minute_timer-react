@@ -140,14 +140,5 @@ class App extends React.Component<AppProps, AppState> {
     );
   }
 }
-// const App: React.FC = () => {
-//   return (
-//     <div className="App">
-//       <TimerInput />
-//       <Timer />
-//       <StartButton />
-//     </div>
-//   );
-// }
 
 export default App;
