@@ -15,7 +15,7 @@ export interface TimerInputState { number: number }
 class TimerInput extends React.Component<TimerInputProps, TimerInputState> {
   render() {
     return (
-      <div style={{ marginLeft:100 }}>
+      <div>
         <h3>Input your desired time</h3>
         <input 
           type="number"
@@ -38,7 +38,7 @@ class Timer extends React.Component<TimerProps> {
   render() {
     return (
       <div>
-        <h1 style={{ fontSize: 100, marginLeft: 100 }}>
+        <h1 style={{ fontSize: 100 }}>
           {this.props.minutes}:{this.props.seconds}
         </h1>
       </div>
@@ -53,7 +53,7 @@ export interface StartButtonProps {
 class StartButton extends React.Component<StartButtonProps> {
   render() {
     return(
-      <div style={{ marginLeft: 100 }}>
+      <div>
         <button onClick={this.props.handleClick}>Start</button>
       </div>
     )
