@@ -92,6 +92,30 @@ class PauseButton extends React.Component<PauseButtonProps> {
   }
 }
 
+export interface ResumeButtonProps {
+  visible: boolean,
+  handleClick: MouseEventHandler<HTMLButtonElement>
+}
+
+class ResumeButton extends React.Component<ResumeButtonProps> {
+  render() {
+    let styleAttrs = {
+      marginLeft: 50,
+      display: this.props.visible ? 'inline-block' : 'none'
+    }
+    return(
+      <div style={styleAttrs}>
+        <button
+          style={{ fontSize: 50 }}
+          onClick={this.props.handleClick}
+        >
+          Resume
+        </button>
+      </div>
+    )
+  }
+}
+
 export interface StopButtonProps {
   handleClick: MouseEventHandler<HTMLButtonElement>
 }
@@ -118,11 +142,12 @@ class StopButton extends React.Component<StopButtonProps> {
 export interface AppProps { }
 export interface AppState {
   seconds: string,
-  minutes: string
+  minutes: string,
+  countDownInProgress: boolean,
+  countDownIsPaused: boolean,
 }
 
 class App extends React.Component<AppProps, AppState> {
-  countDownInProgress: boolean = false;
   secondsRemaining: number;
   intervalHandle?: NodeJS.Timeout;
 
@@ -130,6 +155,8 @@ class App extends React.Component<AppProps, AppState> {
   readonly INITIAL_STATE = {
       minutes: '01',
       seconds: this.DOUBLE_ZEROS,
+      countDownInProgress: false,
+      countDownIsPaused: false,
   }
 
   constructor(props: AppProps) {
@@ -142,6 +169,7 @@ class App extends React.Component<AppProps, AppState> {
     this.handleChange = this.handleChange.bind(this);
     this.startCountDown = this.startCountDown.bind(this);
     this.pauseCountDown = this.pauseCountDown.bind(this);
+    this.resumeCountDown = this.resumeCountDown.bind(this);
     this.stopCountDown = this.stopCountDown.bind(this);
     this.tick = this.tick.bind(this);
   }
@@ -189,7 +217,7 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   startCountDown() {
-    this.countDownInProgress = true;
+    this.setState({ countDownInProgress: true })
     this.startTimer();
 
     let time = Number(this.state.minutes);
@@ -198,11 +226,17 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   pauseCountDown() {
+    this.setState({ countDownIsPaused: true })
     this.stopTimer();
   }
 
+  resumeCountDown() {
+    this.setState({ countDownIsPaused: false })
+    this.startTimer();
+  }
+
   stopCountDown() {
-    this.countDownInProgress = false;
+    this.setState({ countDownInProgress: false })
     this.stopTimer();
     this.setState(this.INITIAL_STATE);
   }
@@ -218,19 +252,26 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   render() {
+    let showPauseButton = this.state.countDownInProgress && !this.state.countDownIsPaused;
+    let showResumeButton = this.state.countDownInProgress && this.state.countDownIsPaused;
+
     return (
       <div className="App">
         <TimerInput 
           minutes={this.state.minutes}
           handleChange={this.handleChange}
-          disabled={this.countDownInProgress}
+          disabled={this.state.countDownInProgress}
         />
         <Timer minutes={this.state.minutes} seconds={this.state.seconds} />
         <div>
           <StartButton handleClick={this.startCountDown} />
           <PauseButton
-            visible={this.countDownInProgress}
+            visible={showPauseButton}
             handleClick={this.pauseCountDown}
+          />
+          <ResumeButton
+            visible={showResumeButton}
+            handleClick={this.resumeCountDown}
           />
           <StopButton handleClick={this.stopCountDown} />
         </div>
