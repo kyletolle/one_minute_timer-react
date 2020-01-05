@@ -67,7 +67,7 @@ export interface StopButtonProps {
 class StopButton extends React.Component<StopButtonProps> {
   render() {
     return(
-      <div style={{ display: 'inline-block' }}>
+      <div style={{ marginLeft: 100, display: 'inline-block' }}>
         <button onClick={this.props.handleClick}>Stop</button>
       </div>
     )
