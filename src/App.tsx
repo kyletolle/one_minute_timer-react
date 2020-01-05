@@ -8,7 +8,8 @@ type EventCallback = (e: ChangeEvent<HTMLInputElement>) => void;
 
 export interface TimerInputProps { 
   minutes: string,
-  handleChange: EventCallback
+  handleChange: EventCallback,
+  disabled: boolean
 }
 export interface TimerInputState { number: number }
 
@@ -20,6 +21,7 @@ class TimerInput extends React.Component<TimerInputProps, TimerInputState> {
         <input 
           type="number"
           min="0"
+          disabled={this.props.disabled}
           value={this.props.minutes}
           onChange={this.props.handleChange}
           required
@@ -81,6 +83,7 @@ export interface AppState {
 }
 
 class App extends React.Component<AppProps, AppState> {
+  countDownInProgress: boolean = false;
   secondsRemaining: number;
   intervalHandle?: NodeJS.Timeout;
 
@@ -150,6 +153,7 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   startCountDown() {
+    this.countDownInProgress = true;
     this.intervalHandle = setInterval(this.tick, 1000);
 
     let time = Number(this.state.minutes);
@@ -158,6 +162,7 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   stopCountDown() {
+    this.countDownInProgress = false;
     this.stopTimer();
     this.setState(this.INITIAL_STATE);
   }
@@ -171,7 +176,11 @@ class App extends React.Component<AppProps, AppState> {
   render() {
     return (
       <div className="App">
-        <TimerInput minutes={this.state.minutes} handleChange={this.handleChange} />
+        <TimerInput 
+          minutes={this.state.minutes}
+          handleChange={this.handleChange}
+          disabled={this.countDownInProgress}
+        />
         <Timer minutes={this.state.minutes} seconds={this.state.seconds} />
         <div>
           <StartButton handleClick={this.startCountDown} />
