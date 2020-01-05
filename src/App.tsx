@@ -57,7 +57,12 @@ class StartButton extends React.Component<StartButtonProps> {
   render() {
     return(
       <div style={{ display: 'inline-block' }}>
-        <button onClick={this.props.handleClick}>Start</button>
+        <button
+          style={{fontSize: 50}}
+          onClick={this.props.handleClick}
+        >
+          Start
+        </button>
       </div>
     )
   }
@@ -71,7 +76,12 @@ class StopButton extends React.Component<StopButtonProps> {
   render() {
     return(
       <div style={{ marginLeft: 100, display: 'inline-block' }}>
-        <button onClick={this.props.handleClick}>Stop</button>
+        <button
+          style={{fontSize: 50}}
+          onClick={this.props.handleClick}
+        >
+          Stop
+        </button>
       </div>
     )
   }
