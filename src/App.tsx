@@ -53,7 +53,7 @@ export interface StartButtonProps {
 class StartButton extends React.Component<StartButtonProps> {
   render() {
     return(
-      <div>
+      <div style={{ display: 'inline-block' }}>
         <button onClick={this.props.handleClick}>Start</button>
       </div>
     )
@@ -67,7 +67,7 @@ export interface StopButtonProps {
 class StopButton extends React.Component<StopButtonProps> {
   render() {
     return(
-      <div>
+      <div style={{ display: 'inline-block' }}>
         <button onClick={this.props.handleClick}>Stop</button>
       </div>
     )
