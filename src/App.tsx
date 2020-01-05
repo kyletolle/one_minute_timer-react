@@ -74,10 +74,14 @@ export interface StopButtonProps {
 
 class StopButton extends React.Component<StopButtonProps> {
   render() {
+    let styleAttrs = {
+       marginLeft: 50,
+        display: 'inline-block'
+    }
     return(
-      <div style={{ marginLeft: 100, display: 'inline-block' }}>
+      <div style={styleAttrs}>
         <button
-          style={{fontSize: 50}}
+          style={{ fontSize: 50 }}
           onClick={this.props.handleClick}
         >
           Stop
