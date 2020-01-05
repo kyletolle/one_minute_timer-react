@@ -1,3 +1,5 @@
+// Built following this tutorial and then changing it to be relevant to TypeScript:
+// https://codeburst.io/lets-build-a-countdown-timer-with-react-part-1-2e7d5692d914
 import React, { ChangeEvent, MouseEventHandler } from 'react';
 import './App.css';
 
