@@ -89,10 +89,22 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   handleChange(event: ChangeEvent<HTMLInputElement>) {
-    let minutesToSet = (event.target as HTMLInputElement).value || '0';
+    let inputElement = (event.target as HTMLInputElement);
+    let newMinutes = inputElement.value;
+    let minutesToSet;
+    if (newMinutes === undefined) {
+      // TODO: Not sure if this would ever get triggered...
+      minutesToSet = this.DOUBLE_ZEROS;
+    }
+    if (Number(newMinutes) < 10) {
+      minutesToSet = "0" + newMinutes;
+    } else {
+      minutesToSet = newMinutes;
+    }
+    
     this.setState({
       minutes: minutesToSet
-    })
+    });
   }
 
   tick() {
