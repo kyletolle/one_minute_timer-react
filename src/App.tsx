@@ -68,6 +68,30 @@ class StartButton extends React.Component<StartButtonProps> {
   }
 }
 
+export interface PauseButtonProps {
+  visible: boolean,
+  handleClick: MouseEventHandler<HTMLButtonElement>
+}
+
+class PauseButton extends React.Component<PauseButtonProps> {
+  render() {
+    let styleAttrs = {
+      marginLeft: 50,
+      display: this.props.visible ? 'inline-block' : 'none'
+    }
+    return(
+      <div style={styleAttrs}>
+        <button
+          style={{ fontSize: 50 }}
+          onClick={this.props.handleClick}
+        >
+          Pause
+        </button>
+      </div>
+    )
+  }
+}
+
 export interface StopButtonProps {
   handleClick: MouseEventHandler<HTMLButtonElement>
 }
@@ -117,6 +141,7 @@ class App extends React.Component<AppProps, AppState> {
 
     this.handleChange = this.handleChange.bind(this);
     this.startCountDown = this.startCountDown.bind(this);
+    this.pauseCountDown = this.pauseCountDown.bind(this);
     this.stopCountDown = this.stopCountDown.bind(this);
     this.tick = this.tick.bind(this);
   }
@@ -172,6 +197,10 @@ class App extends React.Component<AppProps, AppState> {
     this.secondsRemaining = time * 60;
   }
 
+  pauseCountDown() {
+    this.stopTimer();
+  }
+
   stopCountDown() {
     this.countDownInProgress = false;
     this.stopTimer();
@@ -199,6 +228,10 @@ class App extends React.Component<AppProps, AppState> {
         <Timer minutes={this.state.minutes} seconds={this.state.seconds} />
         <div>
           <StartButton handleClick={this.startCountDown} />
+          <PauseButton
+            visible={this.countDownInProgress}
+            handleClick={this.pauseCountDown}
+          />
           <StopButton handleClick={this.stopCountDown} />
         </div>
       </div>
