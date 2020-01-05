@@ -165,7 +165,7 @@ class App extends React.Component<AppProps, AppState> {
 
   startCountDown() {
     this.countDownInProgress = true;
-    this.intervalHandle = setInterval(this.tick, 1000);
+    this.startTimer();
 
     let time = Number(this.state.minutes);
 
@@ -176,6 +176,10 @@ class App extends React.Component<AppProps, AppState> {
     this.countDownInProgress = false;
     this.stopTimer();
     this.setState(this.INITIAL_STATE);
+  }
+
+  private startTimer() {
+    this.intervalHandle = setInterval(this.tick, 1000);
   }
 
   private stopTimer() {
