@@ -67,17 +67,19 @@ export interface AppState {
 }
 
 class App extends React.Component<AppProps, AppState> {
-
   secondsRemaining: number;
   intervalHandle?: NodeJS.Timeout;
+
+  readonly DOUBLE_ZEROS = '00';
+  readonly INITIAL_STATE = {
+      seconds: this.DOUBLE_ZEROS,
+      minutes: this.DOUBLE_ZEROS
+  }
 
   constructor(props: AppProps) {
     super(props);
 
-    this.state = {
-      seconds: '00',
-      minutes: ''
-    }
+    this.state = this.INITIAL_STATE;
 
     this.secondsRemaining = 0;
 
