@@ -125,10 +125,6 @@ class App extends React.Component<AppProps, AppState> {
     let inputElement = (event.target as HTMLInputElement);
     let newMinutes = inputElement.value;
     let minutesToSet;
-    if (newMinutes === undefined) {
-      // TODO: Not sure if this would ever get triggered...
-      minutesToSet = this.DOUBLE_ZEROS;
-    }
     if (Number(newMinutes) < 10) {
       minutesToSet = "0" + newMinutes;
     } else {
