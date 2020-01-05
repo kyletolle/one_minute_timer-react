@@ -94,32 +94,30 @@ class App extends React.Component<AppProps, AppState> {
   }
 
   tick() {
-    var min = Math.floor(this.secondsRemaining / 60)
-    var sec = this.secondsRemaining - (min * 60);
+    let minutes = Math.floor(this.secondsRemaining / 60)
+    let seconds = this.secondsRemaining - (minutes * 60);
 
-    // String conversion comes from https://stackoverflow.com/a/32607656/249218
-    this.setState({
-      minutes: String(min),
-      seconds: String(sec)
-    });
-
-    if (sec < 10) {
-      this.setState({
-        seconds: "0" + this.state.seconds,
-      });
-    }
-
-    if (min < 10) {
-      this.setState({
-        minutes: "0" + min,
-      });
-    }
-
-    if (min === 0 && sec === 0) {
+    if (minutes === 0 && seconds === 0) {
       if (this.intervalHandle != null) {
         clearInterval(this.intervalHandle);
       }
     }
+
+    // String conversion comes from https://stackoverflow.com/a/32607656/249218
+    let secondsToSet = String(seconds);
+    if (seconds < 10) {
+      secondsToSet = "0" + secondsToSet;
+    }
+
+    let minutesToSet = String(minutes);
+    if (minutes < 10) {
+      minutesToSet = "0" + minutesToSet;
+    }
+
+    this.setState({
+      minutes: minutesToSet,
+      seconds: secondsToSet
+    });
 
     this.secondsRemaining--;
   }
