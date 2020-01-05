@@ -128,8 +128,8 @@ class App extends React.Component<AppProps, AppState> {
 
   readonly DOUBLE_ZEROS = '00';
   readonly INITIAL_STATE = {
+      minutes: '01',
       seconds: this.DOUBLE_ZEROS,
-      minutes: this.DOUBLE_ZEROS
   }
 
   constructor(props: AppProps) {
