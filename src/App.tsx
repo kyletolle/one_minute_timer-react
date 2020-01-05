@@ -19,6 +19,7 @@ class TimerInput extends React.Component<TimerInputProps, TimerInputState> {
         <h3>Input your desired time</h3>
         <input 
           type="number"
+          min="0"
           value={this.props.minutes}
           onChange={this.props.handleChange}
           required
