@@ -27,6 +27,12 @@ Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
+### `npm run deploy`
+
+Deploy with this command. It will automatically run the build command before the deploy. It will put the compiled assets onto GH pages at the homepage specified in the `package.json`.
+
+Note: Followed guides at https://medium.com/@hannawerman/deploy-your-react-app-on-github-pages-a1d4cfdc88e9 and https://www.thinkful.com/learn/a-guide-to-using-github-pages/start/existing-project/project-page/existing-repo/ and https://github.com/gitname/react-gh-pages and https://stackoverflow.com/a/49473246/249218 and https://create-react-app.dev/docs/deployment/#github-pages.
+
 ### `npm run eject`
 
 **Note: this is a one-way operation. Once you `eject`, you can’t go back!**
