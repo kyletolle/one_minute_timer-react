@@ -1,6 +1,7 @@
 {
   "name": "one_minute_timer-react",
   "version": "0.1.0",
+  "homepage": "http://kyletolle.github.io/one_minute_timer-react",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
