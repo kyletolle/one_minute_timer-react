@@ -4,10 +4,7 @@ import React, { ChangeEvent, MouseEventHandler } from 'react';
 import './App.css';
 import { TimerInput } from './TimerInput';
 import { Timer } from './Timer';
-
-export interface StartButtonProps {
-  handleClick: MouseEventHandler<HTMLButtonElement>
-}
+import { StartButtonProps } from './StartButtonProps';
 
 class StartButton extends React.Component<StartButtonProps> {
   render() {
