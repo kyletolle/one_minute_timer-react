@@ -4,22 +4,7 @@ import React, { ChangeEvent, MouseEventHandler } from 'react';
 import './App.css';
 import { TimerInput } from './TimerInput';
 import { Timer } from './Timer';
-import { StartButtonProps } from './StartButtonProps';
-
-class StartButton extends React.Component<StartButtonProps> {
-  render() {
-    return(
-      <div style={{ display: 'inline-block' }}>
-        <button
-          style={{fontSize: 50}}
-          onClick={this.props.handleClick}
-        >
-          Start
-        </button>
-      </div>
-    )
-  }
-}
+import { StartButton } from './StartButton';
 
 export interface PauseButtonProps {
   visible: boolean,
