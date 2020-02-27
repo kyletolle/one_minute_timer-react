@@ -9,13 +9,7 @@ import { PauseButton } from './PauseButton';
 import { ResumeButton } from './ResumeButton';
 import { StopButton } from './StopButton';
 import { AppProps } from './AppProps';
-
-export interface AppState {
-  seconds: string,
-  minutes: string,
-  countDownInProgress: boolean,
-  countDownIsPaused: boolean,
-}
+import { AppState } from './AppState';
 
 class App extends React.Component<AppProps, AppState> {
   secondsRemaining: number;
