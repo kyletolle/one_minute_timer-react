@@ -6,26 +6,7 @@ import { TimerInput } from './TimerInput';
 import { Timer } from './Timer';
 import { StartButton } from './StartButton';
 import { PauseButton } from './PauseButton';
-import { ResumeButtonProps } from './ResumeButtonProps';
-
-class ResumeButton extends React.Component<ResumeButtonProps> {
-  render() {
-    let styleAttrs = {
-      marginLeft: 50,
-      display: this.props.visible ? 'inline-block' : 'none'
-    }
-    return(
-      <div style={styleAttrs}>
-        <button
-          style={{ fontSize: 50 }}
-          onClick={this.props.handleClick}
-        >
-          Resume
-        </button>
-      </div>
-    )
-  }
-}
+import { ResumeButton } from './ResumeButton';
 
 export interface StopButtonProps {
   handleClick: MouseEventHandler<HTMLButtonElement>
