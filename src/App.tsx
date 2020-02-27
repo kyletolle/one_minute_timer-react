@@ -6,11 +6,7 @@ import { TimerInput } from './TimerInput';
 import { Timer } from './Timer';
 import { StartButton } from './StartButton';
 import { PauseButton } from './PauseButton';
-
-export interface ResumeButtonProps {
-  visible: boolean,
-  handleClick: MouseEventHandler<HTMLButtonElement>
-}
+import { ResumeButtonProps } from './ResumeButtonProps';
 
 class ResumeButton extends React.Component<ResumeButtonProps> {
   render() {
