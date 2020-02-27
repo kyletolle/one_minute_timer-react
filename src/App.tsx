@@ -1,16 +1,13 @@
 // Built following this tutorial and then changing it to be relevant to TypeScript:
 // https://codeburst.io/lets-build-a-countdown-timer-with-react-part-1-2e7d5692d914
-import React, { ChangeEvent, MouseEventHandler } from 'react';
+import React, { ChangeEvent } from 'react';
 import './App.css';
 import { TimerInput } from './TimerInput';
 import { Timer } from './Timer';
 import { StartButton } from './StartButton';
 import { PauseButton } from './PauseButton';
 import { ResumeButton } from './ResumeButton';
-
-export interface StopButtonProps {
-  handleClick: MouseEventHandler<HTMLButtonElement>
-}
+import { StopButtonProps } from './StopButtonProps';
 
 class StopButton extends React.Component<StopButtonProps> {
   render() {
