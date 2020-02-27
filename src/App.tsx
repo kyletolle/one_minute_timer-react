@@ -3,11 +3,7 @@
 import React, { ChangeEvent, MouseEventHandler } from 'react';
 import './App.css';
 import { TimerInput } from './TimerInput';
-
-export interface TimerProps {
-   minutes: string,
-  seconds: string
-}
+import { TimerProps } from './TimerProps';
 
 class Timer extends React.Component<TimerProps> {
   render() {
