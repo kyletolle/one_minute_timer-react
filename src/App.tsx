@@ -3,19 +3,7 @@
 import React, { ChangeEvent, MouseEventHandler } from 'react';
 import './App.css';
 import { TimerInput } from './TimerInput';
-import { TimerProps } from './TimerProps';
-
-class Timer extends React.Component<TimerProps> {
-  render() {
-    return (
-      <div>
-        <h1 style={{ fontSize: 100 }}>
-          {this.props.minutes}:{this.props.seconds}
-        </h1>
-      </div>
-    );
-  }
-}
+import { Timer } from './Timer';
 
 export interface StartButtonProps {
   handleClick: MouseEventHandler<HTMLButtonElement>
