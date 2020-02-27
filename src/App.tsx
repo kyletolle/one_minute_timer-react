@@ -5,11 +5,7 @@ import './App.css';
 import { TimerInput } from './TimerInput';
 import { Timer } from './Timer';
 import { StartButton } from './StartButton';
-
-export interface PauseButtonProps {
-  visible: boolean,
-  handleClick: MouseEventHandler<HTMLButtonElement>
-}
+import { PauseButtonProps } from './PauseButtonProps';
 
 class PauseButton extends React.Component<PauseButtonProps> {
   render() {
