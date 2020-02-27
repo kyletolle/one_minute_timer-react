@@ -7,26 +7,7 @@ import { Timer } from './Timer';
 import { StartButton } from './StartButton';
 import { PauseButton } from './PauseButton';
 import { ResumeButton } from './ResumeButton';
-import { StopButtonProps } from './StopButtonProps';
-
-class StopButton extends React.Component<StopButtonProps> {
-  render() {
-    let styleAttrs = {
-       marginLeft: 50,
-        display: 'inline-block'
-    }
-    return(
-      <div style={styleAttrs}>
-        <button
-          style={{ fontSize: 50 }}
-          onClick={this.props.handleClick}
-        >
-          Stop
-        </button>
-      </div>
-    )
-  }
-}
+import { StopButton } from './StopButton';
 
 export interface AppProps { }
 export interface AppState {
