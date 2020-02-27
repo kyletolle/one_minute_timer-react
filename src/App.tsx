@@ -8,8 +8,8 @@ import { StartButton } from './StartButton';
 import { PauseButton } from './PauseButton';
 import { ResumeButton } from './ResumeButton';
 import { StopButton } from './StopButton';
+import { AppProps } from './AppProps';
 
-export interface AppProps { }
 export interface AppState {
   seconds: string,
   minutes: string,
