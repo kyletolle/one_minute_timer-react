@@ -2,13 +2,8 @@
 // https://codeburst.io/lets-build-a-countdown-timer-with-react-part-1-2e7d5692d914
 import React, { ChangeEvent, MouseEventHandler } from 'react';
 import './App.css';
-import { EventCallback } from './EventCallback';
+import { TimerInputProps } from './TimerInputProps';
 
-export interface TimerInputProps { 
-  minutes: string,
-  handleChange: EventCallback,
-  disabled: boolean
-}
 export interface TimerInputState { number: number }
 
 class TimerInput extends React.Component<TimerInputProps, TimerInputState> {
