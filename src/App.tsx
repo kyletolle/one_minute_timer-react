@@ -1,8 +1,8 @@
 /** @jsx jsx */
 // Built following this tutorial and then changing it to be relevant to TypeScript:
 // https://codeburst.io/lets-build-a-countdown-timer-with-react-part-1-2e7d5692d914
-import React, { ChangeEvent } from 'react';
 import { jsx } from '@emotion/react'
+import React, { ChangeEvent } from 'react';
 import styled from '@emotion/styled'
 import { TimerInput } from './TimerInput';
 import { Timer } from './Timer';
