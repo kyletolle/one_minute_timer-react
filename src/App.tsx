@@ -5,7 +5,7 @@ import { jsx } from '@emotion/react'
 import React, { ChangeEvent } from 'react';
 import styled from '@emotion/styled'
 import { TimerInput } from './TimerInput';
-import { Timer } from './Timer';
+import Timer from './Timer';
 import StartButton from './StartButton';
 import { PauseButton } from './PauseButton';
 import ResumeButton from './ResumeButton';
