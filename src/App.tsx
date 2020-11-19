@@ -9,7 +9,7 @@ import { Timer } from './Timer';
 import { StartButton } from './StartButton';
 import { PauseButton } from './PauseButton';
 import ResumeButton from './ResumeButton';
-import { StopButton } from './StopButton';
+import StopButton from './StopButton';
 import { AppProps } from './AppProps';
 import { AppState } from './AppState';
 
@@ -140,7 +140,7 @@ class UnstyledApp extends React.Component<AppProps, AppState> {
             handleClick={this.resumeCountDown}
             className={this.props.className}
           />
-          <StopButton handleClick={this.stopCountDown} />
+          <StopButton className={this.props.className} handleClick={this.stopCountDown} />
         </div>
       </div>
     );
