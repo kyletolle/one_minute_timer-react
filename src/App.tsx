@@ -10,7 +10,7 @@ import styled from '@emotion/styled';
 import TimerInput from './TimerInput';
 import Timer from './Timer';
 import StartButton from './StartButton';
-import { PauseButton } from './PauseButton';
+import PauseButton from './PauseButton';
 import ResumeButton from './ResumeButton';
 import StopButton from './StopButton';
 import AppProps from './AppProps';
@@ -146,13 +146,14 @@ class UnstyledApp extends React.Component<AppProps, AppState> {
             handleClick={this.startCountDown}
           />
           <PauseButton
+            className={this.props.className}
             visible={showPauseButton}
             handleClick={this.pauseCountDown}
           />
           <ResumeButton
+            className={this.props.className}
             visible={showResumeButton}
             handleClick={this.resumeCountDown}
-            className={this.props.className}
           />
           <StopButton
             className={this.props.className}
