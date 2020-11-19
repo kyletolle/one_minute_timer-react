@@ -1,5 +1,5 @@
 import React from 'react';
-import { PauseButtonProps } from './PauseButtonProps';
+import PauseButtonProps from './PauseButtonProps';
 
 export class PauseButton extends React.Component<PauseButtonProps> {
   render() {

@@ -1,6 +1,8 @@
 import { MouseEventHandler } from 'react';
 
-export interface PauseButtonProps {
+interface PauseButtonProps {
   visible: boolean;
   handleClick: MouseEventHandler<HTMLButtonElement>;
 }
+
+export default PauseButtonProps;
