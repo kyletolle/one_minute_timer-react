@@ -10,7 +10,6 @@
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
     "@types/jest": "^24.9.1",
-    "@types/node": "^12.19.5",
     "@types/prop-types": "^15.7.3",
     "@types/react": "^16.9.56",
     "@types/react-dom": "^16.9.9",
@@ -23,12 +22,13 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "react-scripts test",
+    "test": "npm run prettier && npm run lint && react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
     "lint": "eslint --ext .js,.ts,.tsx src/",
-    "lint:fix": "eslint --ext .js,.ts,.tsx --fix src/"
+    "prettier": "prettier --list-different \"src/**/*.{ts,tsx}\"",
+    "prettier:fix": "prettier --write \"src/**/*.{ts,tsx}\""
   },
   "browserslist": {
     "production": [
@@ -43,6 +43,7 @@
     ]
   },
   "devDependencies": {
+    "@types/node": "^12.19.6",
     "@typescript-eslint/eslint-plugin": "^4.8.1",
     "@typescript-eslint/parser": "^4.8.1",
     "eslint": "^7.13.0",
