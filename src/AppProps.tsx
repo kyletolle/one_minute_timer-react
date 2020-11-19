@@ -1,3 +1,5 @@
-export interface AppProps {
-  className: string,
+interface AppProps {
+  className: string;
 }
+
+export default AppProps;

@@ -1,23 +1,30 @@
 /** @jsx jsx */
-import { jsx } from '@emotion/react'
-import styled from '@emotion/styled'
+import { jsx } from '@emotion/react';
+import styled from '@emotion/styled';
 import React from 'react';
+import PropTypes from 'prop-types';
 import StartButtonProps from './StartButtonProps';
 
-const UnstyledStartButton: React.FC<StartButtonProps> = ({className, handleClick}) => (
+const UnstyledStartButton: React.FC<StartButtonProps> = ({
+  className,
+  handleClick,
+}) => (
   <div className={className}>
-    <button onClick={handleClick}>
-      Start
-    </button>
+    <button onClick={handleClick}>Start</button>
   </div>
-)
+);
+
+UnstyledStartButton.propTypes = {
+  className: PropTypes.string.isRequired,
+  handleClick: PropTypes.func.isRequired,
+};
 
 const StartButton = styled(UnstyledStartButton)`
-display: inline-block;
+  display: inline-block;
 
-button {
-  font-size: 3em;
-}
+  button {
+    font-size: 3em;
+  }
 `;
 
 export default StartButton;

@@ -1,29 +1,34 @@
 /** @jsx jsx */
-// Built following this tutorial and then changing it to be relevant to TypeScript:
-// https://codeburst.io/lets-build-a-countdown-timer-with-react-part-1-2e7d5692d914
-import { jsx } from '@emotion/react'
+/*
+ * Built following this tutorial and then changing it to be relevant to
+ * TypeScript:
+ * https://codeburst.io/lets-build-a-countdown-timer-with-react-part-1-2e7d5692d914
+ */
+import { jsx } from '@emotion/react';
 import React, { ChangeEvent } from 'react';
-import styled from '@emotion/styled'
+import styled from '@emotion/styled';
 import TimerInput from './TimerInput';
 import Timer from './Timer';
 import StartButton from './StartButton';
 import { PauseButton } from './PauseButton';
 import ResumeButton from './ResumeButton';
 import StopButton from './StopButton';
-import { AppProps } from './AppProps';
-import { AppState } from './AppState';
+import AppProps from './AppProps';
+import AppState from './AppState';
 
 class UnstyledApp extends React.Component<AppProps, AppState> {
   secondsRemaining: number;
-  intervalHandle?: NodeJS.Timeout;
+
+  intervalHandle?: number;
 
   readonly DOUBLE_ZEROS = '00';
+
   readonly INITIAL_STATE = {
-      minutes: '01',
-      seconds: this.DOUBLE_ZEROS,
-      countDownInProgress: false,
-      countDownIsPaused: false,
-  }
+    minutes: '01',
+    seconds: this.DOUBLE_ZEROS,
+    countDownInProgress: false,
+    countDownIsPaused: false,
+  };
 
   constructor(props: AppProps) {
     super(props);
@@ -40,24 +45,25 @@ class UnstyledApp extends React.Component<AppProps, AppState> {
     this.tick = this.tick.bind(this);
   }
 
-  handleChange(event: ChangeEvent<HTMLInputElement>) {
-    let inputElement = (event.target as HTMLInputElement);
-    let newMinutes = inputElement.value;
+  handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
+    const inputElement = event.target as HTMLInputElement;
+    const newMinutes = inputElement.value;
     let minutesToSet;
+
     if (Number(newMinutes) < 10) {
-      minutesToSet = "0" + newMinutes;
+      minutesToSet = `0${newMinutes}`;
     } else {
       minutesToSet = newMinutes;
     }
 
     this.setState({
-      minutes: minutesToSet
+      minutes: minutesToSet,
     });
-  }
+  };
 
-  tick() {
-    let minutes = Math.floor(this.secondsRemaining / 60);
-    let seconds = this.secondsRemaining - (minutes * 60);
+  tick = (): void => {
+    const minutes = Math.floor(this.secondsRemaining / 60);
+    const seconds = this.secondsRemaining - minutes * 60;
 
     if (minutes === 0 && seconds === 0) {
       this.stopTimer();
@@ -65,61 +71,65 @@ class UnstyledApp extends React.Component<AppProps, AppState> {
 
     // String conversion comes from https://stackoverflow.com/a/32607656/249218
     let secondsToSet = String(seconds);
+
     if (seconds < 10) {
-      secondsToSet = "0" + secondsToSet;
+      secondsToSet = `0${secondsToSet}`;
     }
 
     let minutesToSet = String(minutes);
+
     if (minutes < 10) {
-      minutesToSet = "0" + minutesToSet;
+      minutesToSet = `0${minutesToSet}`;
     }
 
     this.setState({
       minutes: minutesToSet,
-      seconds: secondsToSet
+      seconds: secondsToSet,
     });
 
     this.secondsRemaining--;
-  }
+  };
 
-  startCountDown() {
-    this.setState({ countDownInProgress: true })
+  startCountDown = (): void => {
+    this.setState({ countDownInProgress: true });
     this.startTimer();
 
-    let time = Number(this.state.minutes);
+    const time = Number(this.state.minutes);
 
     this.secondsRemaining = time * 60;
-  }
+  };
 
-  pauseCountDown() {
-    this.setState({ countDownIsPaused: true })
+  pauseCountDown = (): void => {
+    this.setState({ countDownIsPaused: true });
     this.stopTimer();
-  }
+  };
 
-  resumeCountDown() {
-    this.setState({ countDownIsPaused: false })
+  resumeCountDown = (): void => {
+    this.setState({ countDownIsPaused: false });
     this.startTimer();
-  }
+  };
 
-  stopCountDown() {
-    this.setState({ countDownInProgress: false })
+  stopCountDown = (): void => {
+    this.setState({ countDownInProgress: false });
     this.stopTimer();
     this.setState(this.INITIAL_STATE);
-  }
+  };
 
-  private startTimer() {
+  private readonly startTimer = (): void => {
     this.intervalHandle = setInterval(this.tick, 1000);
-  }
+  };
 
-  private stopTimer() {
+  private readonly stopTimer = (): void => {
     if (this.intervalHandle != null) {
       clearInterval(this.intervalHandle);
     }
-  }
+  };
 
-  render() {
-    let showPauseButton = this.state.countDownInProgress && !this.state.countDownIsPaused;
-    let showResumeButton = this.state.countDownInProgress && this.state.countDownIsPaused;
+  render = (): jsx.JSX.Element => {
+    const showPauseButton =
+      this.state.countDownInProgress && !this.state.countDownIsPaused;
+    const showResumeButton =
+      this.state.countDownInProgress && this.state.countDownIsPaused;
 
     return (
       <div className={this.props.className}>
@@ -131,7 +141,10 @@ class UnstyledApp extends React.Component<AppProps, AppState> {
         />
         <Timer minutes={this.state.minutes} seconds={this.state.seconds} />
         <div>
-          <StartButton className={this.props.className} handleClick={this.startCountDown} />
+          <StartButton
+            className={this.props.className}
+            handleClick={this.startCountDown}
+          />
           <PauseButton
             visible={showPauseButton}
             handleClick={this.pauseCountDown}
@@ -141,11 +154,14 @@ class UnstyledApp extends React.Component<AppProps, AppState> {
             handleClick={this.resumeCountDown}
             className={this.props.className}
           />
-          <StopButton className={this.props.className} handleClick={this.stopCountDown} />
+          <StopButton
+            className={this.props.className}
+            handleClick={this.stopCountDown}
+          />
         </div>
       </div>
     );
-  }
+  };
 }
 
 const App = styled(UnstyledApp)`
