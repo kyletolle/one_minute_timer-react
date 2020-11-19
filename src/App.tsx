@@ -5,7 +5,7 @@
  * https://codeburst.io/lets-build-a-countdown-timer-with-react-part-1-2e7d5692d914
  */
 import { jsx } from '@emotion/react';
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import styled from '@emotion/styled';
 import TimerInput from './TimerInput';
 import Timer from './Timer';
@@ -14,38 +14,30 @@ import PauseButton from './PauseButton';
 import ResumeButton from './ResumeButton';
 import StopButton from './StopButton';
 import AppProps from './AppProps';
-import AppState from './AppState';
 
-class UnstyledApp extends React.Component<AppProps, AppState> {
-  secondsRemaining: number;
+const DOUBLE_ZEROS = '00';
+const INITIAL_MINUTES = '01';
+const INITIAL_SECONDS = DOUBLE_ZEROS;
+const INITIAL_COUNTDOWN_IN_PROGRESS = false;
+const INITIAL_COUNTDOWN_IS_PAUSED = false;
 
-  intervalHandle?: number;
+const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
+  const { className } = props;
+  const [minutes, setMinutes] = useState(INITIAL_MINUTES);
+  const [seconds, setSeconds] = useState(INITIAL_SECONDS);
+  const [countDownInProgress, setCountDownInProgress] = useState(
+    INITIAL_COUNTDOWN_IN_PROGRESS,
+  );
+  const [countDownIsPaused, setCountDownIsPaused] = useState(
+    INITIAL_COUNTDOWN_IS_PAUSED,
+  );
+  const [secondsRemaining, setSecondsRemaining] = useState(0);
+  const [intervalHandle, setIntervalHandle] = useState(0);
 
-  readonly DOUBLE_ZEROS = '00';
+  const showPauseButton = countDownInProgress && !countDownIsPaused;
+  const showResumeButton = countDownInProgress && countDownIsPaused;
 
-  readonly INITIAL_STATE = {
-    minutes: '01',
-    seconds: this.DOUBLE_ZEROS,
-    countDownInProgress: false,
-    countDownIsPaused: false,
-  };
-
-  constructor(props: AppProps) {
-    super(props);
-
-    this.state = this.INITIAL_STATE;
-
-    this.secondsRemaining = 0;
-
-    this.handleChange = this.handleChange.bind(this);
-    this.startCountDown = this.startCountDown.bind(this);
-    this.pauseCountDown = this.pauseCountDown.bind(this);
-    this.resumeCountDown = this.resumeCountDown.bind(this);
-    this.stopCountDown = this.stopCountDown.bind(this);
-    this.tick = this.tick.bind(this);
-  }
-
-  handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
+  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const inputElement = event.target as HTMLInputElement;
     const newMinutes = inputElement.value;
     let minutesToSet;
@@ -56,17 +48,15 @@ class UnstyledApp extends React.Component<AppProps, AppState> {
       minutesToSet = newMinutes;
     }
 
-    this.setState({
-      minutes: minutesToSet,
-    });
+    setMinutes(minutesToSet);
   };
 
-  tick = (): void => {
-    const minutes = Math.floor(this.secondsRemaining / 60);
-    const seconds = this.secondsRemaining - minutes * 60;
+  const tick = (): void => {
+    const minutes = Math.floor(secondsRemaining / 60);
+    const seconds = secondsRemaining - minutes * 60;
 
     if (minutes === 0 && seconds === 0) {
-      this.stopTimer();
+      stopTimer();
     }
 
     // String conversion comes from https://stackoverflow.com/a/32607656/249218
@@ -82,88 +72,75 @@ class UnstyledApp extends React.Component<AppProps, AppState> {
       minutesToSet = `0${minutesToSet}`;
     }
 
-    this.setState({
-      minutes: minutesToSet,
-      seconds: secondsToSet,
-    });
-
-    this.secondsRemaining--;
+    setSeconds(secondsToSet);
+    setSecondsRemaining(secondsRemaining - 1);
   };
 
-  startCountDown = (): void => {
-    this.setState({ countDownInProgress: true });
-    this.startTimer();
+  const startCountDown = (): void => {
+    setCountDownInProgress(true);
+    startTimer();
 
-    const time = Number(this.state.minutes);
+    const time = Number(minutes);
 
-    this.secondsRemaining = time * 60;
+    setSecondsRemaining(time * 60);
   };
 
-  pauseCountDown = (): void => {
-    this.setState({ countDownIsPaused: true });
-    this.stopTimer();
+  const pauseCountDown = (): void => {
+    setCountDownIsPaused(true);
+    stopTimer();
   };
 
-  resumeCountDown = (): void => {
-    this.setState({ countDownIsPaused: false });
-    this.startTimer();
+  const resumeCountDown = (): void => {
+    setCountDownIsPaused(false);
+    startTimer();
   };
 
-  stopCountDown = (): void => {
-    this.setState({ countDownInProgress: false });
-    this.stopTimer();
-    this.setState(this.INITIAL_STATE);
+  const stopCountDown = (): void => {
+    setCountDownInProgress(false);
+    stopTimer();
+    setMinutes(INITIAL_MINUTES);
+    setSeconds(INITIAL_SECONDS);
+    setCountDownInProgress(INITIAL_COUNTDOWN_IN_PROGRESS);
+    setCountDownIsPaused(INITIAL_COUNTDOWN_IS_PAUSED);
   };
 
-  private readonly startTimer = (): void => {
-    this.intervalHandle = window.setInterval(this.tick, 1000);
+  const startTimer = (): void => {
+    setIntervalHandle(window.setInterval(tick, 1000));
   };
 
-  private readonly stopTimer = (): void => {
-    if (this.intervalHandle != null) {
-      clearInterval(this.intervalHandle);
+  const stopTimer = (): void => {
+    if (intervalHandle != null) {
+      clearInterval(intervalHandle);
+      setIntervalHandle(0);
     }
   };
 
-  render = (): jsx.JSX.Element => {
-    const showPauseButton =
-      this.state.countDownInProgress && !this.state.countDownIsPaused;
-    const showResumeButton =
-      this.state.countDownInProgress && this.state.countDownIsPaused;
-
-    return (
-      <div className={this.props.className}>
-        <TimerInput
-          className={this.props.className}
-          minutes={this.state.minutes}
-          handleChange={this.handleChange}
-          disabled={this.state.countDownInProgress}
+  return (
+    <div className={className}>
+      <TimerInput
+        className={className}
+        minutes={minutes}
+        handleChange={handleChange}
+        disabled={countDownInProgress}
+      />
+      <Timer minutes={minutes} seconds={seconds} />
+      <div>
+        <StartButton className={className} handleClick={startCountDown} />
+        <PauseButton
+          className={className}
+          visible={showPauseButton}
+          handleClick={pauseCountDown}
         />
-        <Timer minutes={this.state.minutes} seconds={this.state.seconds} />
-        <div>
-          <StartButton
-            className={this.props.className}
-            handleClick={this.startCountDown}
-          />
-          <PauseButton
-            className={this.props.className}
-            visible={showPauseButton}
-            handleClick={this.pauseCountDown}
-          />
-          <ResumeButton
-            className={this.props.className}
-            visible={showResumeButton}
-            handleClick={this.resumeCountDown}
-          />
-          <StopButton
-            className={this.props.className}
-            handleClick={this.stopCountDown}
-          />
-        </div>
+        <ResumeButton
+          className={className}
+          visible={showResumeButton}
+          handleClick={resumeCountDown}
+        />
+        <StopButton className={className} handleClick={stopCountDown} />
       </div>
-    );
-  };
-}
+    </div>
+  );
+};
 
 const App = styled(UnstyledApp)`
   text-align: center;
