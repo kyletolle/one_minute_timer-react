@@ -1,17 +1,19 @@
+/** @jsx jsx */
 // Built following this tutorial and then changing it to be relevant to TypeScript:
 // https://codeburst.io/lets-build-a-countdown-timer-with-react-part-1-2e7d5692d914
 import React, { ChangeEvent } from 'react';
-import './App.css';
+import { jsx } from '@emotion/react'
+import styled from '@emotion/styled'
 import { TimerInput } from './TimerInput';
 import { Timer } from './Timer';
 import { StartButton } from './StartButton';
 import { PauseButton } from './PauseButton';
-import { ResumeButton } from './ResumeButton';
+import ResumeButton from './ResumeButton';
 import { StopButton } from './StopButton';
 import { AppProps } from './AppProps';
 import { AppState } from './AppState';
 
-class App extends React.Component<AppProps, AppState> {
+class UnstyledApp extends React.Component<AppProps, AppState> {
   secondsRemaining: number;
   intervalHandle?: NodeJS.Timeout;
 
@@ -47,7 +49,7 @@ class App extends React.Component<AppProps, AppState> {
     } else {
       minutesToSet = newMinutes;
     }
-    
+
     this.setState({
       minutes: minutesToSet
     });
@@ -120,8 +122,8 @@ class App extends React.Component<AppProps, AppState> {
     let showResumeButton = this.state.countDownInProgress && this.state.countDownIsPaused;
 
     return (
-      <div className="App">
-        <TimerInput 
+      <div className={this.props.className}>
+        <TimerInput
           minutes={this.state.minutes}
           handleChange={this.handleChange}
           disabled={this.state.countDownInProgress}
@@ -136,6 +138,7 @@ class App extends React.Component<AppProps, AppState> {
           <ResumeButton
             visible={showResumeButton}
             handleClick={this.resumeCountDown}
+            className={this.props.className}
           />
           <StopButton handleClick={this.stopCountDown} />
         </div>
@@ -143,5 +146,9 @@ class App extends React.Component<AppProps, AppState> {
     );
   }
 }
+
+const App = styled(UnstyledApp)`
+  text-align: center;
+`;
 
 export default App;

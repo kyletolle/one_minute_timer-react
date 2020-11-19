@@ -10,7 +10,7 @@ export class StopButton extends React.Component<StopButtonProps> {
     return (<div style={styleAttrs}>
       <button style={{ fontSize: 50 }} onClick={this.props.handleClick}>
         Stop
-        </button>
+      </button>
     </div>);
   }
 }
