@@ -116,7 +116,7 @@ class UnstyledApp extends React.Component<AppProps, AppState> {
   };
 
   private readonly startTimer = (): void => {
-    this.intervalHandle = setInterval(this.tick, 1000);
+    this.intervalHandle = window.setInterval(this.tick, 1000);
   };
 
   private readonly stopTimer = (): void => {
