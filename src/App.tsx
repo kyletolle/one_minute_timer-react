@@ -6,7 +6,7 @@ import React, { ChangeEvent } from 'react';
 import styled from '@emotion/styled'
 import { TimerInput } from './TimerInput';
 import { Timer } from './Timer';
-import { StartButton } from './StartButton';
+import StartButton from './StartButton';
 import { PauseButton } from './PauseButton';
 import ResumeButton from './ResumeButton';
 import StopButton from './StopButton';
@@ -130,7 +130,7 @@ class UnstyledApp extends React.Component<AppProps, AppState> {
         />
         <Timer minutes={this.state.minutes} seconds={this.state.seconds} />
         <div>
-          <StartButton handleClick={this.startCountDown} />
+          <StartButton className={this.props.className} handleClick={this.startCountDown} />
           <PauseButton
             visible={showPauseButton}
             handleClick={this.pauseCountDown}
