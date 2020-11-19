@@ -4,7 +4,7 @@
 import { jsx } from '@emotion/react'
 import React, { ChangeEvent } from 'react';
 import styled from '@emotion/styled'
-import { TimerInput } from './TimerInput';
+import TimerInput from './TimerInput';
 import Timer from './Timer';
 import StartButton from './StartButton';
 import { PauseButton } from './PauseButton';
@@ -124,6 +124,7 @@ class UnstyledApp extends React.Component<AppProps, AppState> {
     return (
       <div className={this.props.className}>
         <TimerInput
+          className={this.props.className}
           minutes={this.state.minutes}
           handleChange={this.handleChange}
           disabled={this.state.countDownInProgress}

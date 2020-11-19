@@ -1,12 +1,28 @@
+/** @jsx jsx */
 import React from 'react';
-import { TimerInputProps } from './TimerInputProps';
-import { TimerInputState } from './TimerInputState';
+import { jsx } from '@emotion/react'
+import styled from '@emotion/styled'
+import TimerInputProps from './TimerInputProps';
 
-export class TimerInput extends React.Component<TimerInputProps, TimerInputState> {
-  render() {
-    return (<div>
-      <h3>Input your desired time</h3>
-      <input style={{ fontSize: '2em', width: '2em' }} type="number" min="0" disabled={this.props.disabled} value={this.props.minutes} onChange={this.props.handleChange} required />
-    </div>);
-  }
+const UnstyledTimerInput: React.FC<TimerInputProps> = ({className, minutes, handleChange, disabled}) => (
+  <div className={className}>
+    <h3>Input your desired time</h3>
+    <input
+      type="number"
+      min="0"
+      disabled={disabled}
+      value={minutes}
+      onChange={handleChange}
+      required
+    />
+  </div>
+);
+
+const TimerInput = styled(UnstyledTimerInput)`
+input {
+  font-size: 2em;
+  width: 2em;
 }
+`;
+
+export default TimerInput;
