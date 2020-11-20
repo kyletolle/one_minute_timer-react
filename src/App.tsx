@@ -23,6 +23,8 @@ const INITIAL_COUNTDOWN_IS_PAUSED = false;
 
 const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
   const { className } = props;
+  const [ minutesToStartWith, setMinutesToStartWith ] =
+    useState(INITIAL_MINUTES);
   const [minutes, setMinutes] = useState(INITIAL_MINUTES);
   const [seconds, setSeconds] = useState(INITIAL_SECONDS);
   const [countDownInProgress, setCountDownInProgress] = useState(
@@ -36,7 +38,6 @@ const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
   const showPauseButton = countDownInProgress && !countDownIsPaused;
   const showResumeButton = countDownInProgress && countDownIsPaused;
 
-
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const inputElement = event.target as HTMLInputElement;
     const newMinutes = inputElement.value;
@@ -48,6 +49,7 @@ const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
       minutesToSet = newMinutes;
     }
 
+    setMinutesToStartWith(minutesToSet);
     setMinutes(minutesToSet);
   };
 
@@ -58,14 +60,6 @@ const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
 
     const minutesNumber = Math.floor(secondsRemaining / 60);
     const secondsNumber = secondsRemaining - minutesNumber * 60;
-
-    if (
-      countDownInProgress &&
-      minutesNumber <= 0 &&
-      secondsNumber <= 0
-    ) {
-      stopTimer();
-    }
 
     // String conversion comes from https://stackoverflow.com/a/32607656/249218
     let secondsString = String(secondsNumber);
@@ -84,6 +78,8 @@ const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
     if (countDownInProgress && secondsRemaining > 0) {
       const timer = setInterval(tick, 1000);
       return () => clearInterval(timer);
+    } else {
+      stopCountDown();
     }
   }, [countDownInProgress, countDownIsPaused, secondsRemaining]);
 
@@ -107,23 +103,18 @@ const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
   };
 
   const stopCountDown = (): void => {
-    setCountDownInProgress(false);
-    stopTimer();
-    setMinutes(INITIAL_MINUTES);
+    setSecondsRemaining(0);
+    setMinutes(minutesToStartWith);
     setSeconds(INITIAL_SECONDS);
     setCountDownInProgress(INITIAL_COUNTDOWN_IN_PROGRESS);
     setCountDownIsPaused(INITIAL_COUNTDOWN_IS_PAUSED);
-  };
-
-  const stopTimer = (): void => {
-    setSecondsRemaining(0);
   };
 
   return (
     <div className={className}>
       <TimerInput
         className={className}
-        minutes={minutes}
+        minutes={minutesToStartWith}
         handleChange={handleChange}
         disabled={countDownInProgress}
       />
