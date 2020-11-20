@@ -1,147 +1,145 @@
-// Built following this tutorial and then changing it to be relevant to TypeScript:
-// https://codeburst.io/lets-build-a-countdown-timer-with-react-part-1-2e7d5692d914
-import React, { ChangeEvent } from 'react';
-import './App.css';
-import { TimerInput } from './TimerInput';
-import { Timer } from './Timer';
-import { StartButton } from './StartButton';
-import { PauseButton } from './PauseButton';
-import { ResumeButton } from './ResumeButton';
-import { StopButton } from './StopButton';
-import { AppProps } from './AppProps';
-import { AppState } from './AppState';
+/** @jsx jsx */
+/*
+ * Built following this tutorial and then changing it to be relevant to
+ * TypeScript:
+ * https://codeburst.io/lets-build-a-countdown-timer-with-react-part-1-2e7d5692d914
+ */
+import { jsx } from '@emotion/react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
+import styled from '@emotion/styled';
+import TimerInput from './TimerInput';
+import Timer from './Timer';
+import StartButton from './StartButton';
+import PauseButton from './PauseButton';
+import ResumeButton from './ResumeButton';
+import StopButton from './StopButton';
+import AppProps from './AppProps';
 
-class App extends React.Component<AppProps, AppState> {
-  secondsRemaining: number;
-  intervalHandle?: NodeJS.Timeout;
+const DOUBLE_ZEROS = '00';
+const INITIAL_MINUTES = '01';
+const INITIAL_SECONDS = DOUBLE_ZEROS;
+const INITIAL_COUNTDOWN_IN_PROGRESS = false;
+const INITIAL_COUNTDOWN_IS_PAUSED = false;
 
-  readonly DOUBLE_ZEROS = '00';
-  readonly INITIAL_STATE = {
-      minutes: '01',
-      seconds: this.DOUBLE_ZEROS,
-      countDownInProgress: false,
-      countDownIsPaused: false,
-  }
+const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
+  const { className } = props;
+  const [minutesToStartWith, setMinutesToStartWith] = useState(INITIAL_MINUTES);
+  const [minutes, setMinutes] = useState(INITIAL_MINUTES);
+  const [seconds, setSeconds] = useState(INITIAL_SECONDS);
+  const [countDownInProgress, setCountDownInProgress] = useState(
+    INITIAL_COUNTDOWN_IN_PROGRESS,
+  );
+  const [countDownIsPaused, setCountDownIsPaused] = useState(
+    INITIAL_COUNTDOWN_IS_PAUSED,
+  );
+  const [secondsRemaining, setSecondsRemaining] = useState(0);
 
-  constructor(props: AppProps) {
-    super(props);
+  const showPauseButton = countDownInProgress && !countDownIsPaused;
+  const showResumeButton = countDownInProgress && countDownIsPaused;
 
-    this.state = this.INITIAL_STATE;
-
-    this.secondsRemaining = 0;
-
-    this.handleChange = this.handleChange.bind(this);
-    this.startCountDown = this.startCountDown.bind(this);
-    this.pauseCountDown = this.pauseCountDown.bind(this);
-    this.resumeCountDown = this.resumeCountDown.bind(this);
-    this.stopCountDown = this.stopCountDown.bind(this);
-    this.tick = this.tick.bind(this);
-  }
-
-  handleChange(event: ChangeEvent<HTMLInputElement>) {
-    let inputElement = (event.target as HTMLInputElement);
-    let newMinutes = inputElement.value;
+  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
+    const inputElement = event.target as HTMLInputElement;
+    const newMinutes = inputElement.value;
     let minutesToSet;
+
     if (Number(newMinutes) < 10) {
-      minutesToSet = "0" + newMinutes;
+      minutesToSet = `0${newMinutes}`;
     } else {
       minutesToSet = newMinutes;
     }
-    
-    this.setState({
-      minutes: minutesToSet
-    });
-  }
 
-  tick() {
-    let minutes = Math.floor(this.secondsRemaining / 60);
-    let seconds = this.secondsRemaining - (minutes * 60);
+    setMinutesToStartWith(minutesToSet);
+    setMinutes(minutesToSet);
+  };
 
-    if (minutes === 0 && seconds === 0) {
-      this.stopTimer();
+  // Using timer approach from
+  // https://yizhiyue.me/2019/12/08/how-to-create-a-simple-react-countdown-timer
+  useEffect(() => {
+    if (!countDownInProgress || countDownIsPaused) {
+      return;
     }
+
+    const minutesNumber = Math.floor(secondsRemaining / 60);
+    const secondsNumber = secondsRemaining - minutesNumber * 60;
 
     // String conversion comes from https://stackoverflow.com/a/32607656/249218
-    let secondsToSet = String(seconds);
-    if (seconds < 10) {
-      secondsToSet = "0" + secondsToSet;
+    let secondsString = String(secondsNumber);
+    if (secondsNumber < 10) {
+      secondsString = `0${secondsString}`;
     }
 
-    let minutesToSet = String(minutes);
-    if (minutes < 10) {
-      minutesToSet = "0" + minutesToSet;
+    let minutesString = String(minutesNumber);
+
+    if (minutesNumber < 10) {
+      minutesString = `0${minutesString}`;
     }
+    setMinutes(minutesString);
+    setSeconds(secondsString);
 
-    this.setState({
-      minutes: minutesToSet,
-      seconds: secondsToSet
-    });
-
-    this.secondsRemaining--;
-  }
-
-  startCountDown() {
-    this.setState({ countDownInProgress: true })
-    this.startTimer();
-
-    let time = Number(this.state.minutes);
-
-    this.secondsRemaining = time * 60;
-  }
-
-  pauseCountDown() {
-    this.setState({ countDownIsPaused: true })
-    this.stopTimer();
-  }
-
-  resumeCountDown() {
-    this.setState({ countDownIsPaused: false })
-    this.startTimer();
-  }
-
-  stopCountDown() {
-    this.setState({ countDownInProgress: false })
-    this.stopTimer();
-    this.setState(this.INITIAL_STATE);
-  }
-
-  private startTimer() {
-    this.intervalHandle = setInterval(this.tick, 1000);
-  }
-
-  private stopTimer() {
-    if (this.intervalHandle != null) {
-      clearInterval(this.intervalHandle);
+    if (countDownInProgress && secondsRemaining > 0) {
+      const timer = setInterval(tick, 1000);
+      return () => clearInterval(timer);
+    } else {
+      stopCountDown();
     }
-  }
+  }, [countDownInProgress, countDownIsPaused, secondsRemaining]);
 
-  render() {
-    let showPauseButton = this.state.countDownInProgress && !this.state.countDownIsPaused;
-    let showResumeButton = this.state.countDownInProgress && this.state.countDownIsPaused;
+  const tick = (): void => {
+    setSecondsRemaining(secondsRemaining - 1);
+  };
 
-    return (
-      <div className="App">
-        <TimerInput 
-          minutes={this.state.minutes}
-          handleChange={this.handleChange}
-          disabled={this.state.countDownInProgress}
+  const startCountDown = (): void => {
+    setCountDownInProgress(true);
+    const time = Number(minutes);
+    const newSecondsRemaining = time * 60;
+    setSecondsRemaining(newSecondsRemaining);
+  };
+
+  const pauseCountDown = (): void => {
+    setCountDownIsPaused(true);
+  };
+
+  const resumeCountDown = (): void => {
+    setCountDownIsPaused(false);
+  };
+
+  const stopCountDown = (): void => {
+    setSecondsRemaining(0);
+    setMinutes(minutesToStartWith);
+    setSeconds(INITIAL_SECONDS);
+    setCountDownInProgress(INITIAL_COUNTDOWN_IN_PROGRESS);
+    setCountDownIsPaused(INITIAL_COUNTDOWN_IS_PAUSED);
+  };
+
+  return (
+    <div className={className}>
+      <TimerInput
+        className={className}
+        minutes={minutesToStartWith}
+        handleChange={handleChange}
+        disabled={countDownInProgress}
+      />
+      <Timer minutes={minutes} seconds={seconds} />
+      <div>
+        <StartButton className={className} handleClick={startCountDown} />
+        <PauseButton
+          className={className}
+          visible={showPauseButton}
+          handleClick={pauseCountDown}
         />
-        <Timer minutes={this.state.minutes} seconds={this.state.seconds} />
-        <div>
-          <StartButton handleClick={this.startCountDown} />
-          <PauseButton
-            visible={showPauseButton}
-            handleClick={this.pauseCountDown}
-          />
-          <ResumeButton
-            visible={showResumeButton}
-            handleClick={this.resumeCountDown}
-          />
-          <StopButton handleClick={this.stopCountDown} />
-        </div>
+        <ResumeButton
+          className={className}
+          visible={showResumeButton}
+          handleClick={resumeCountDown}
+        />
+        <StopButton className={className} handleClick={stopCountDown} />
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+const App = styled(UnstyledApp)`
+  text-align: center;
+`;
 
 export default App;

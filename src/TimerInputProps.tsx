@@ -1,7 +1,10 @@
 import { EventCallback } from './EventCallback';
 
-export interface TimerInputProps {
+interface TimerInputProps {
+  className: string;
   minutes: string;
   handleChange: EventCallback;
   disabled: boolean;
 }
+
+export default TimerInputProps;

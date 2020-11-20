@@ -1,4 +1,6 @@
-export interface TimerProps {
+interface TimerProps {
   minutes: string;
   seconds: string;
 }
+
+export default TimerProps;

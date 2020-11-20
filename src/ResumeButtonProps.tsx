@@ -1,6 +1,9 @@
 import { MouseEventHandler } from 'react';
 
-export interface ResumeButtonProps {
+interface ResumeButtonProps {
+  className: string;
   visible: boolean;
   handleClick: MouseEventHandler<HTMLButtonElement>;
 }
+
+export default ResumeButtonProps;

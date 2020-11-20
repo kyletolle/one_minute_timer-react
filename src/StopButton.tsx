@@ -1,16 +1,31 @@
+/** @jsx jsx */
 import React from 'react';
-import { StopButtonProps } from './StopButtonProps';
+import { jsx } from '@emotion/react';
+import styled from '@emotion/styled';
+import PropTypes from 'prop-types';
+import StopButtonProps from './StopButtonProps';
 
-export class StopButton extends React.Component<StopButtonProps> {
-  render() {
-    let styleAttrs = {
-      marginLeft: 50,
-      display: 'inline-block'
-    };
-    return (<div style={styleAttrs}>
-      <button style={{ fontSize: 50 }} onClick={this.props.handleClick}>
-        Stop
-        </button>
-    </div>);
+const UnstyledStopButton: React.FC<StopButtonProps> = ({
+  className,
+  handleClick,
+}) => (
+  <div className={className}>
+    <button onClick={handleClick}>Stop</button>
+  </div>
+);
+
+UnstyledStopButton.propTypes = {
+  className: PropTypes.string.isRequired,
+  handleClick: PropTypes.func.isRequired,
+};
+
+const StopButton = styled(UnstyledStopButton)`
+  margin-left: 3em;
+  display: inline-block;
+
+  button {
+    font-size: 3em;
   }
-}
+`;
+
+export default StopButton;

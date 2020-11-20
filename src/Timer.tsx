@@ -1,12 +1,18 @@
 import React from 'react';
-import { TimerProps } from './TimerProps';
+import PropTypes from 'prop-types';
+import TimerProps from './TimerProps';
 
-export class Timer extends React.Component<TimerProps> {
-  render() {
-    return (<div>
-      <h1 style={{ fontSize: 100 }}>
-        {this.props.minutes}:{this.props.seconds}
-      </h1>
-    </div>);
-  }
-}
+const Timer: React.FC<TimerProps> = ({ minutes, seconds }) => (
+  <div>
+    <h1 style={{ fontSize: 100 }}>
+      {minutes}:{seconds}
+    </h1>
+  </div>
+);
+
+Timer.propTypes = {
+  minutes: PropTypes.string.isRequired,
+  seconds: PropTypes.string.isRequired,
+};
+
+export default Timer;

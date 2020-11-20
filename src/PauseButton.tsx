@@ -1,16 +1,35 @@
+/** @jsx jsx */
 import React from 'react';
-import { PauseButtonProps } from './PauseButtonProps';
+import { jsx, css, SerializedStyles } from '@emotion/react';
+import styled from '@emotion/styled';
+import PropTypes from 'prop-types';
+import PauseButtonProps from './PauseButtonProps';
 
-export class PauseButton extends React.Component<PauseButtonProps> {
-  render() {
-    let styleAttrs = {
-      marginLeft: 50,
-      display: this.props.visible ? 'inline-block' : 'none'
-    };
-    return (<div style={styleAttrs}>
-      <button style={{ fontSize: 50 }} onClick={this.props.handleClick}>
-        Pause
-        </button>
-    </div>);
+const display = (props: PauseButtonProps): SerializedStyles =>
+  css`
+    display: ${props.visible ? 'inline-block' : 'none'};
+  `;
+
+const UnstyledPauseButton: React.FC<PauseButtonProps> = ({
+  className,
+  handleClick,
+}) => (
+  <div className={className}>
+    <button onClick={handleClick}>Pause</button>
+  </div>
+);
+
+UnstyledPauseButton.propTypes = {
+  className: PropTypes.string.isRequired,
+  handleClick: PropTypes.func.isRequired,
+};
+
+const PauseButton = styled(UnstyledPauseButton)`
+  margin-left: 3em;
+  button {
+    font-size: 3em;
   }
-}
+
+  ${display}
+`;
+export default PauseButton;

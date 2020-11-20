@@ -1,5 +1,8 @@
 import { MouseEventHandler } from 'react';
 
-export interface StartButtonProps {
+interface StartButtonProps {
+  className: string;
   handleClick: MouseEventHandler<HTMLButtonElement>;
 }
+
+export default StartButtonProps;
