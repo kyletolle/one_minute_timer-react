@@ -23,8 +23,7 @@ const INITIAL_COUNTDOWN_IS_PAUSED = false;
 
 const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
   const { className } = props;
-  const [ minutesToStartWith, setMinutesToStartWith ] =
-    useState(INITIAL_MINUTES);
+  const [minutesToStartWith, setMinutesToStartWith] = useState(INITIAL_MINUTES);
   const [minutes, setMinutes] = useState(INITIAL_MINUTES);
   const [seconds, setSeconds] = useState(INITIAL_SECONDS);
   const [countDownInProgress, setCountDownInProgress] = useState(
@@ -56,7 +55,9 @@ const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
   // Using timer approach from
   // https://yizhiyue.me/2019/12/08/how-to-create-a-simple-react-countdown-timer
   useEffect(() => {
-    if (!countDownInProgress || countDownIsPaused) { return; }
+    if (!countDownInProgress || countDownIsPaused) {
+      return;
+    }
 
     const minutesNumber = Math.floor(secondsRemaining / 60);
     const secondsNumber = secondsRemaining - minutesNumber * 60;

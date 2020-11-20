@@ -1,6 +1,8 @@
 import { MouseEventHandler } from 'react';
 
-export default interface StopButtonProps {
+interface StopButtonProps {
   className: string;
   handleClick: MouseEventHandler<HTMLButtonElement>;
-};
+}
+
+export default StopButtonProps;
