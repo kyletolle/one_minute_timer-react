@@ -32,7 +32,6 @@ const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
     INITIAL_COUNTDOWN_IS_PAUSED,
   );
   const [secondsRemaining, setSecondsRemaining] = useState(0);
-  const [intervalHandle, setIntervalHandle] = useState(0);
 
   const showPauseButton = countDownInProgress && !countDownIsPaused;
   const showResumeButton = countDownInProgress && countDownIsPaused;
@@ -55,7 +54,7 @@ const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
   // Using timer approach from
   // https://yizhiyue.me/2019/12/08/how-to-create-a-simple-react-countdown-timer
   useEffect(() => {
-    if (!countDownInProgress) { return; }
+    if (!countDownInProgress || countDownIsPaused) { return; }
 
     const minutesNumber = Math.floor(secondsRemaining / 60);
     const secondsNumber = secondsRemaining - minutesNumber * 60;
@@ -86,7 +85,7 @@ const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
       const timer = setInterval(tick, 1000);
       return () => clearInterval(timer);
     }
-  }, [secondsRemaining]);
+  }, [countDownInProgress, countDownIsPaused, secondsRemaining]);
 
   const tick = (): void => {
     setSecondsRemaining(secondsRemaining - 1);
@@ -97,17 +96,14 @@ const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
     const time = Number(minutes);
     const newSecondsRemaining = time * 60;
     setSecondsRemaining(newSecondsRemaining);
-    startTimer();
   };
 
   const pauseCountDown = (): void => {
     setCountDownIsPaused(true);
-    stopTimer();
   };
 
   const resumeCountDown = (): void => {
     setCountDownIsPaused(false);
-    startTimer();
   };
 
   const stopCountDown = (): void => {
@@ -119,18 +115,9 @@ const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
     setCountDownIsPaused(INITIAL_COUNTDOWN_IS_PAUSED);
   };
 
-  const startTimer = (): void => {
-    // const intervalId = window.setInterval(tick, 1000);
-    // setIntervalHandle(intervalId);
-  };
-
   const stopTimer = (): void => {
-    if (intervalHandle != null) {
-      // clearInterval(intervalHandle);
-      // setIntervalHandle(0);
-    }
+    setSecondsRemaining(0);
   };
-
 
   return (
     <div className={className}>
