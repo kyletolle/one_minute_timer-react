@@ -1,22 +1,20 @@
 {
   "files": {
-    "main.css": "/one_minute_timer-react/static/css/main.d1b05096.chunk.css",
-    "main.js": "/one_minute_timer-react/static/js/main.715ac907.chunk.js",
-    "main.js.map": "/one_minute_timer-react/static/js/main.715ac907.chunk.js.map",
-    "runtime-main.js": "/one_minute_timer-react/static/js/runtime-main.559b82d2.js",
-    "runtime-main.js.map": "/one_minute_timer-react/static/js/runtime-main.559b82d2.js.map",
-    "static/js/2.6e2f29d1.chunk.js": "/one_minute_timer-react/static/js/2.6e2f29d1.chunk.js",
-    "static/js/2.6e2f29d1.chunk.js.map": "/one_minute_timer-react/static/js/2.6e2f29d1.chunk.js.map",
-    "index.html": "/one_minute_timer-react/index.html",
-    "precache-manifest.76b0de0c6b999de7e1f02061d2059952.js": "/one_minute_timer-react/precache-manifest.76b0de0c6b999de7e1f02061d2059952.js",
-    "service-worker.js": "/one_minute_timer-react/service-worker.js",
-    "static/css/main.d1b05096.chunk.css.map": "/one_minute_timer-react/static/css/main.d1b05096.chunk.css.map",
-    "static/js/2.6e2f29d1.chunk.js.LICENSE": "/one_minute_timer-react/static/js/2.6e2f29d1.chunk.js.LICENSE"
+    "main.css": "https://kyletolle.github.io/one_minute_timer-react/static/css/main.6dea0f05.chunk.css",
+    "main.js": "https://kyletolle.github.io/one_minute_timer-react/static/js/main.9be0a1d5.chunk.js",
+    "main.js.map": "https://kyletolle.github.io/one_minute_timer-react/static/js/main.9be0a1d5.chunk.js.map",
+    "runtime-main.js": "https://kyletolle.github.io/one_minute_timer-react/static/js/runtime-main.636ee28d.js",
+    "runtime-main.js.map": "https://kyletolle.github.io/one_minute_timer-react/static/js/runtime-main.636ee28d.js.map",
+    "static/js/2.cfdf1401.chunk.js": "https://kyletolle.github.io/one_minute_timer-react/static/js/2.cfdf1401.chunk.js",
+    "static/js/2.cfdf1401.chunk.js.map": "https://kyletolle.github.io/one_minute_timer-react/static/js/2.cfdf1401.chunk.js.map",
+    "index.html": "https://kyletolle.github.io/one_minute_timer-react/index.html",
+    "static/css/main.6dea0f05.chunk.css.map": "https://kyletolle.github.io/one_minute_timer-react/static/css/main.6dea0f05.chunk.css.map",
+    "static/js/2.cfdf1401.chunk.js.LICENSE.txt": "https://kyletolle.github.io/one_minute_timer-react/static/js/2.cfdf1401.chunk.js.LICENSE.txt"
   },
   "entrypoints": [
-    "static/js/runtime-main.559b82d2.js",
-    "static/js/2.6e2f29d1.chunk.js",
-    "static/css/main.d1b05096.chunk.css",
-    "static/js/main.715ac907.chunk.js"
+    "static/js/runtime-main.636ee28d.js",
+    "static/js/2.cfdf1401.chunk.js",
+    "static/css/main.6dea0f05.chunk.css",
+    "static/js/main.9be0a1d5.chunk.js"
   ]
 }
