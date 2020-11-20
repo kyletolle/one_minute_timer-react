@@ -2,7 +2,7 @@ env:
   browser: true
   es2021: true
 extends:
-  # - eslint:recommended
+  - eslint:recommended
   # - 'plugin:@typescript-eslint/eslint-recommended'
   # - 'plugin:@typescript-eslint/recommended'
   # - 'plugin:prettier/recommended'
@@ -28,6 +28,12 @@ rules:
   semi:
     - error
     - always
+  semi-spacing:
+    - error
+    -
+      before: false
+      after: false
+  no-extra-semi: error
   quotes:
     - error
     - single

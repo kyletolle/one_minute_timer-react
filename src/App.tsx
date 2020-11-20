@@ -5,7 +5,7 @@
  * https://codeburst.io/lets-build-a-countdown-timer-with-react-part-1-2e7d5692d914
  */
 import { jsx } from '@emotion/react';
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
 import TimerInput from './TimerInput';
 import Timer from './Timer';
@@ -37,6 +37,7 @@ const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
   const showPauseButton = countDownInProgress && !countDownIsPaused;
   const showResumeButton = countDownInProgress && countDownIsPaused;
 
+
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const inputElement = event.target as HTMLInputElement;
     const newMinutes = inputElement.value;
@@ -51,38 +52,52 @@ const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
     setMinutes(minutesToSet);
   };
 
-  const tick = (): void => {
-    const minutes = Math.floor(secondsRemaining / 60);
-    const seconds = secondsRemaining - minutes * 60;
+  // Using timer approach from
+  // https://yizhiyue.me/2019/12/08/how-to-create-a-simple-react-countdown-timer
+  useEffect(() => {
+    if (!countDownInProgress) { return; }
 
-    if (minutes === 0 && seconds === 0) {
+    const minutesNumber = Math.floor(secondsRemaining / 60);
+    const secondsNumber = secondsRemaining - minutesNumber * 60;
+
+    if (
+      countDownInProgress &&
+      minutesNumber <= 0 &&
+      secondsNumber <= 0
+    ) {
       stopTimer();
     }
 
     // String conversion comes from https://stackoverflow.com/a/32607656/249218
-    let secondsToSet = String(seconds);
-
-    if (seconds < 10) {
-      secondsToSet = `0${secondsToSet}`;
+    let secondsString = String(secondsNumber);
+    if (secondsNumber < 10) {
+      secondsString = `0${secondsString}`;
     }
 
-    let minutesToSet = String(minutes);
+    let minutesString = String(minutesNumber);
 
-    if (minutes < 10) {
-      minutesToSet = `0${minutesToSet}`;
+    if (minutesNumber < 10) {
+      minutesString = `0${minutesString}`;
     }
+    setMinutes(minutesString);
+    setSeconds(secondsString);
 
-    setSeconds(secondsToSet);
+    if (countDownInProgress && secondsRemaining > 0) {
+      const timer = setInterval(tick, 1000);
+      return () => clearInterval(timer);
+    }
+  }, [secondsRemaining]);
+
+  const tick = (): void => {
     setSecondsRemaining(secondsRemaining - 1);
   };
 
   const startCountDown = (): void => {
     setCountDownInProgress(true);
-    startTimer();
-
     const time = Number(minutes);
-
-    setSecondsRemaining(time * 60);
+    const newSecondsRemaining = time * 60;
+    setSecondsRemaining(newSecondsRemaining);
+    startTimer();
   };
 
   const pauseCountDown = (): void => {
@@ -105,15 +120,17 @@ const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
   };
 
   const startTimer = (): void => {
-    setIntervalHandle(window.setInterval(tick, 1000));
+    // const intervalId = window.setInterval(tick, 1000);
+    // setIntervalHandle(intervalId);
   };
 
   const stopTimer = (): void => {
     if (intervalHandle != null) {
-      clearInterval(intervalHandle);
-      setIntervalHandle(0);
+      // clearInterval(intervalHandle);
+      // setIntervalHandle(0);
     }
   };
+
 
   return (
     <div className={className}>
