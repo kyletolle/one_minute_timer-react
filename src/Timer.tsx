@@ -23,12 +23,13 @@ UnstyledTimer.propTypes = {
 };
 
 const Timer = styled(UnstyledTimer)`
-  display: flex;
-  justify-content: center;
+  // display: flex;
+  // justify-content: center;
 
   h1 {
     width: 4.5em;
-    font-size: 5em;
+    height: 1em;
+    font-size: 4em;
     text-align: left;
   }
 `;

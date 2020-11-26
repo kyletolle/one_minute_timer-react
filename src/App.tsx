@@ -35,6 +35,7 @@ const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
     countDownIsPaused: INITIAL_COUNTDOWN_IS_PAUSED,
     endTimeInMs: 0,
     remainingTimeInMs: 0,
+    currentOffset: 0,
   });
 
   /**
@@ -132,15 +133,20 @@ const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
   if (remainingTimeToUse <= 0) {
     remainingTimeToUse = ONE_MINUTE_IN_MS;
   }
-  const minutes = ('0' + (Math.floor(remainingTimeToUse / 60_000) % 60)).slice(
-    -2,
-  );
-  const seconds = ('0' + (Math.floor(remainingTimeToUse / 1000) % 60)).slice(
-    -2,
-  );
-  let centiseconds = ('0' + (Math.floor(remainingTimeToUse / 10) % 100)).slice(
-    -2,
-  );
+  const minutesNumber = Math.floor(remainingTimeToUse / 60_000) % 60;
+  const minutes = ('0' + minutesNumber).slice(-2);
+  const secondsFloat = remainingTimeToUse / 1000;
+  const secondsNumber = Math.floor(secondsFloat) % 60;
+  const seconds = ('0' + secondsNumber).slice(-2);
+  const centisecondsNumber = Math.floor(remainingTimeToUse / 10) % 100;
+  let centiseconds = ('0' + centisecondsNumber).slice(-2);
+
+  const perimeter = 190 * 2 * Math.PI;
+  console.log('perimeter', perimeter);
+  const currentOffset = !countDownInProgress
+    ? 0
+    : (perimeter * secondsFloat) / 60 - perimeter;
+  console.log('currentOffset', currentOffset);
 
   return (
     <div className={className}>
@@ -150,36 +156,81 @@ const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
         handleChange={handleChange}
         disabled={countDownInProgress}
       /> */}
-      <Timer
-        className={className}
-        minutes={minutes}
-        seconds={seconds}
-        centiseconds={centiseconds}
-      />
-      <div>
-        {!countDownInProgress && (
-          <StartButton className={className} handleClick={startCountDown} />
-        )}
-        <PauseButton
+      <div className="controls">
+        <Timer
           className={className}
-          visible={showPauseButton}
-          handleClick={pauseCountDown}
+          minutes={minutes}
+          seconds={seconds}
+          centiseconds={centiseconds}
         />
-        <ResumeButton
-          className={className}
-          visible={showResumeButton}
-          handleClick={resumeCountDown}
-        />
-        {countDownInProgress && (
-          <StopButton className={className} handleClick={stopCountDown} />
-        )}
+        <div className="buttons">
+          {!countDownInProgress && (
+            <StartButton className={className} handleClick={startCountDown} />
+          )}
+          {showPauseButton && (
+            <PauseButton
+              className={className}
+              visible={showPauseButton}
+              handleClick={pauseCountDown}
+            />
+          )}
+          {showResumeButton && (
+            <ResumeButton
+              className={className}
+              visible={showResumeButton}
+              handleClick={resumeCountDown}
+            />
+          )}
+          {countDownInProgress && (
+            <StopButton className={className} handleClick={stopCountDown} />
+          )}
+        </div>
       </div>
+      <svg className="dial">
+        <circle
+          fill="transparent"
+          stroke="green"
+          stroke-width="15"
+          r="190"
+          cx="0"
+          cy="200"
+          strokeDasharray={perimeter}
+          strokeDashoffset={currentOffset}
+          transform="rotate(-90 100 100)"
+        />
+      </svg>
     </div>
   );
 };
 
 const App = styled(UnstyledApp)`
   text-align: center;
+  .controls {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 15em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+  }
+
+  .dial {
+    height: 400px;
+    width: 400px;
+  }
+
+  .buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  button {
+    font-size: 2em;
+  }
 `;
 
 export default App;

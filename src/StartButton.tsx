@@ -21,10 +21,6 @@ UnstyledStartButton.propTypes = {
 
 const StartButton = styled(UnstyledStartButton)`
   display: inline-block;
-
-  button {
-    font-size: 3em;
-  }
 `;
 
 export default StartButton;

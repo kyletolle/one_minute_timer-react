@@ -25,11 +25,6 @@ UnstyledResumeButton.propTypes = {
 };
 
 const ResumeButton = styled(UnstyledResumeButton)`
-  margin-left: 3em;
-  button {
-    font-size: 3em;
-  }
-
   ${display}
 `;
 

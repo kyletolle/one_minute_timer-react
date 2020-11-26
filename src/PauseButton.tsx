@@ -25,10 +25,6 @@ UnstyledPauseButton.propTypes = {
 };
 
 const PauseButton = styled(UnstyledPauseButton)`
-  button {
-    font-size: 3em;
-  }
-
   ${display}
 `;
 export default PauseButton;

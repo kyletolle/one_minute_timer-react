@@ -21,11 +21,6 @@ UnstyledStopButton.propTypes = {
 
 const StopButton = styled(UnstyledStopButton)`
   margin-left: 3em;
-  display: inline-block;
-
-  button {
-    font-size: 3em;
-  }
 `;
 
 export default StopButton;
