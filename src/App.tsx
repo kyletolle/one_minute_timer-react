@@ -5,8 +5,9 @@
  * https://codeburst.io/lets-build-a-countdown-timer-with-react-part-1-2e7d5692d914
  */
 import { jsx } from '@emotion/react';
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import styled from '@emotion/styled';
+// import TimerInput from './TimerInput';
 import Timer from './Timer';
 import StartButton from './StartButton';
 import PauseButton from './PauseButton';
@@ -14,8 +15,12 @@ import ResumeButton from './ResumeButton';
 import StopButton from './StopButton';
 import AppProps from './AppProps';
 
+// const DOUBLE_ZEROS = '00';
+// const INITIAL_MINUTES = '01';
+// const INITIAL_SECONDS = DOUBLE_ZEROS;
 const INITIAL_COUNTDOWN_IN_PROGRESS = false;
 const INITIAL_COUNTDOWN_IS_PAUSED = false;
+
 const ONE_MINUTE_IN_MS = 60 * 1_000;
 
 /* First used the timer approach from
@@ -32,61 +37,78 @@ const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
     INITIAL_COUNTDOWN_IS_PAUSED,
   );
 
+  // const [endTimeInMs, setEndTimeInMs] = useState(0);
+  // console.log('initialEndTimeInMs', endTimeInMs);
+  // const [remainingTimeInMs, setRemainingTimeInMs] = useState(0);
+  // const [timerInterval, setTimerInterval] = useState(0);
+
   const [timeData, setTimeData] = useState({
     endTimeInMs: 0,
     remainingTimeInMs: 0,
+    timerInterval: 0,
   });
 
-  useEffect(() => {
-    const timerInterval = window.setInterval(() => {
-      const { endTimeInMs, remainingTimeInMs } = timeData;
-      console.log('tick: endTimeInMs', endTimeInMs);
-      console.log('tick: remainingTimeInMs', remainingTimeInMs);
-      const shouldRun =
-        countDownInProgress &&
-        !countDownIsPaused &&
-        (endTimeInMs !== 0 || remainingTimeInMs !== 0);
-      if (!shouldRun) {
-        console.log('Should NOT run.');
-        return;
-      }
+  const startInterval = (): number => {
+    return window.setInterval(() => {
+      tick();
+    }, 50);
+  };
 
-      const newRemainingTimeInMs = endTimeInMs - Date.now();
-      console.log('tick: newRemainingTimeInMs', newRemainingTimeInMs);
+  const tick = (): void => {
+    const { endTimeInMs } = timeData;
+    const newRemainingTimeInMs = endTimeInMs - Date.now();
+    console.log('endTimeInMs', endTimeInMs);
+    console.log('newRemainingTimeInMs', newRemainingTimeInMs);
 
-      const newTimeData = Object.assign({}, timeData, {
-        remainingTimeInMs: newRemainingTimeInMs,
-      });
-      setTimeData(newTimeData);
-    }, 500);
-    return () => clearInterval(timerInterval);
-  }, []);
+    if (newRemainingTimeInMs <= 0) {
+      return;
+    }
+    const newTimeData = Object.assign({}, timeData, {
+      remainingTimeInMs: newRemainingTimeInMs,
+    });
+    setTimeData(newTimeData);
+  };
 
   const resumeCountDown = (): void => {
     setCountDownIsPaused(false);
+    const newTimeData = Object.assign({}, timeData, {
+      timerInterval: startInterval(),
+    });
+    setTimeData(newTimeData);
   };
 
   const startCountDown = (): void => {
+    setCountDownInProgress(true);
     const now = Date.now();
     const newEndTimeInMs = now + ONE_MINUTE_IN_MS;
     const newTimeData = Object.assign({}, timeData, {
       endTimeInMs: newEndTimeInMs,
       remainingTimeInMs: ONE_MINUTE_IN_MS,
-      // timerInterval: startInterval(),
+      timerInterval: startInterval(),
     });
-    console.log('startCountDown: newTimeData', newTimeData);
     setTimeData(newTimeData);
-    setCountDownInProgress(true);
-    setCountDownIsPaused(false);
+
+    console.log('New Time Data', newTimeData);
+    resumeCountDown();
+  };
+
+  const stopInterval = (): void => {
+    window.clearInterval(timeData.timerInterval);
+    const newTimeData = Object.assign({}, timeData, {
+      timerInterval: 0,
+    });
+    setTimeData(newTimeData);
   };
 
   const pauseCountDown = (): void => {
     setCountDownIsPaused(true);
+    stopInterval();
   };
 
   const stopCountDown = (): void => {
     setCountDownInProgress(INITIAL_COUNTDOWN_IN_PROGRESS);
     setCountDownIsPaused(INITIAL_COUNTDOWN_IS_PAUSED);
+    stopInterval();
     const newTimeData = Object.assign({}, timeData, {
       endTimeInMs: 0,
       remainingTimeInMs: 0,
@@ -98,7 +120,7 @@ const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
   const showResumeButton = countDownInProgress && countDownIsPaused;
 
   const { remainingTimeInMs } = timeData;
-  console.log('remainingTimeInMs during render', remainingTimeInMs);
+  // console.log('remainingTimeInMs', remainingTimeInMs);
   const minutes = ('0' + (Math.floor(remainingTimeInMs / 60_000) % 60)).slice(
     -2,
   );
