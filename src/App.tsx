@@ -37,67 +37,67 @@ const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
     INITIAL_COUNTDOWN_IS_PAUSED,
   );
 
-  // const [endTimeInMs, setEndTimeInMs] = useState(0);
-  // console.log('initialEndTimeInMs', endTimeInMs);
-  // const [remainingTimeInMs, setRemainingTimeInMs] = useState(0);
-  // const [timerInterval, setTimerInterval] = useState(0);
+  const [endTimeInMs, setEndTimeInMs] = useState(0);
+  console.log('initialEndTimeInMs', endTimeInMs);
+  const [remainingTimeInMs, setRemainingTimeInMs] = useState(0);
+  const [timerInterval, setTimerInterval] = useState(0);
 
-  const [timeData, setTimeData] = useState({
-    endTimeInMs: 0,
-    remainingTimeInMs: 0,
-    timerInterval: 0,
-  });
+  const showPauseButton = countDownInProgress && !countDownIsPaused;
+  const showResumeButton = countDownInProgress && countDownIsPaused;
 
-  const startInterval = (): number => {
-    return window.setInterval(() => {
-      tick();
-    }, 50);
-  };
+  // useEffect(() => {
+  //   if (!countDownInProgress || countDownIsPaused) {
+  //     return;
+  //   }
 
-  const tick = (): void => {
-    const { endTimeInMs } = timeData;
-    const newRemainingTimeInMs = endTimeInMs - Date.now();
-    console.log('endTimeInMs', endTimeInMs);
-    console.log('newRemainingTimeInMs', newRemainingTimeInMs);
+  //   const minutesNumber = Math.floor(secondsRemaining / 60);
+  //   const secondsNumber = secondsRemaining - minutesNumber * 60;
 
-    if (newRemainingTimeInMs <= 0) {
-      return;
-    }
-    const newTimeData = Object.assign({}, timeData, {
-      remainingTimeInMs: newRemainingTimeInMs,
-    });
-    setTimeData(newTimeData);
-  };
+  //   // String conversion comes from https://stackoverflow.com/a/32607656/249218
+  //   let secondsString = String(secondsNumber);
+  //   if (secondsNumber < 10) {
+  //     secondsString = `0${secondsString}`;
+  //   }
 
-  const resumeCountDown = (): void => {
-    setCountDownIsPaused(false);
-    const newTimeData = Object.assign({}, timeData, {
-      timerInterval: startInterval(),
-    });
-    setTimeData(newTimeData);
-  };
+  //   let minutesString = String(minutesNumber);
+
+  //   if (minutesNumber < 10) {
+  //     minutesString = `0${minutesString}`;
+  //   }
+  //   setMinutes(minutesString);
+  //   setSeconds(secondsString);
+
+  //   if (countDownInProgress && secondsRemaining > 0) {
+  //     const timer = setInterval(tick, 1000);
+  //     return () => clearInterval(timer);
+  //   } else {
+  //     stopCountDown();
+  //   }
+  // }, [countDownInProgress, countDownIsPaused, secondsRemaining]);
 
   const startCountDown = (): void => {
     setCountDownInProgress(true);
+    // const time = Number(minutes);
+    // const newSecondsRemaining = time * 60;
+    // setSecondsRemaining(newSecondsRemaining);
     const now = Date.now();
     const newEndTimeInMs = now + ONE_MINUTE_IN_MS;
-    const newTimeData = Object.assign({}, timeData, {
-      endTimeInMs: newEndTimeInMs,
-      remainingTimeInMs: ONE_MINUTE_IN_MS,
-      timerInterval: startInterval(),
-    });
-    setTimeData(newTimeData);
-
-    console.log('New Time Data', newTimeData);
+    setEndTimeInMs(newEndTimeInMs);
+    setRemainingTimeInMs(ONE_MINUTE_IN_MS);
+    console.log('Now', now);
+    console.log('startTimeInMs', now);
+    console.log('endTimeInMs', newEndTimeInMs);
+    console.log('remainingTimeInMs', ONE_MINUTE_IN_MS);
     resumeCountDown();
   };
 
   const stopInterval = (): void => {
-    window.clearInterval(timeData.timerInterval);
-    const newTimeData = Object.assign({}, timeData, {
-      timerInterval: 0,
-    });
-    setTimeData(newTimeData);
+    window.clearInterval(timerInterval);
+    setTimerInterval(0);
+  };
+
+  const startInterval = (): void => {
+    setTimerInterval(window.setInterval(tick, 50));
   };
 
   const pauseCountDown = (): void => {
@@ -105,22 +105,34 @@ const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
     stopInterval();
   };
 
+  const resumeCountDown = (): void => {
+    setCountDownIsPaused(false);
+    startInterval();
+  };
+
   const stopCountDown = (): void => {
+    // setSecondsRemaining(0);
+    // setMinutes(minutesToStartWith);
+    // setSeconds(INITIAL_SECONDS);
     setCountDownInProgress(INITIAL_COUNTDOWN_IN_PROGRESS);
     setCountDownIsPaused(INITIAL_COUNTDOWN_IS_PAUSED);
     stopInterval();
-    const newTimeData = Object.assign({}, timeData, {
-      endTimeInMs: 0,
-      remainingTimeInMs: 0,
-    });
-    setTimeData(newTimeData);
+    setRemainingTimeInMs(0);
   };
 
-  const showPauseButton = countDownInProgress && !countDownIsPaused;
-  const showResumeButton = countDownInProgress && countDownIsPaused;
+  const tick = (): void => {
+    // setSecondsRemaining(secondsRemaining - 1);
+    const newRemainingTimeInMs = endTimeInMs - Date.now();
+    console.log('endTimeInMs', endTimeInMs);
+    console.log('newRemainingTimeInMs', newRemainingTimeInMs);
+    if (newRemainingTimeInMs <= 0) {
+      stopCountDown();
+      return;
+    }
+    setRemainingTimeInMs(newRemainingTimeInMs);
+  };
 
-  const { remainingTimeInMs } = timeData;
-  // console.log('remainingTimeInMs', remainingTimeInMs);
+  console.log('remainingTimeInMs', remainingTimeInMs);
   const minutes = ('0' + (Math.floor(remainingTimeInMs / 60_000) % 60)).slice(
     -2,
   );
