@@ -51,8 +51,6 @@ const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
         endTimeInMs,
         remainingTimeInMs,
       } = timeData;
-      // console.log('tick: timeData', timeData);
-      // const shouldRun = true;
       const newRemainingTimeInMs = endTimeInMs - Date.now();
       // console.log('tick: newRemainingTimeInMs', newRemainingTimeInMs);
 
@@ -129,7 +127,7 @@ const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
   const showResumeButton = countDownInProgress && countDownIsPaused;
 
   let remainingTimeToUse = remainingTimeInMs;
-  if (remainingTimeToUse < 0) {
+  if (remainingTimeToUse <= 0) {
     remainingTimeToUse = ONE_MINUTE_IN_MS;
   }
   const minutes = ('0' + (Math.floor(remainingTimeToUse / 60_000) % 60)).slice(
