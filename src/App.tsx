@@ -44,38 +44,40 @@ const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
    * https://reactgo.com/react-setinterval/
    */
   useEffect(() => {
-    const timerInterval = window.setInterval(() => {
-      let {
-        countDownInProgress,
-        countDownIsPaused,
-        endTimeInMs,
-        remainingTimeInMs,
-      } = timeData;
-      const newRemainingTimeInMs = endTimeInMs - Date.now();
-      // console.log('tick: newRemainingTimeInMs', newRemainingTimeInMs);
-
-      if (remainingTimeInMs < 0) {
-        pauseCountDown();
-        stopCountDown();
-        return;
-      }
-
-      const shouldRun =
-        countDownInProgress &&
-        !countDownIsPaused &&
-        (endTimeInMs > 0 || remainingTimeInMs > 0);
-      if (!shouldRun) {
-        // console.log('Should NOT run.');
-        return;
-      }
-
-      const newTimeData = Object.assign({}, timeData, {
-        remainingTimeInMs: newRemainingTimeInMs,
-      });
-      setTimeData(newTimeData);
-    }, 25);
+    const timerInterval = window.setInterval(tick, 25);
     return () => clearInterval(timerInterval);
   });
+
+  const tick = () => {
+    let {
+      countDownInProgress,
+      countDownIsPaused,
+      endTimeInMs,
+      remainingTimeInMs,
+    } = timeData;
+    const newRemainingTimeInMs = endTimeInMs - Date.now();
+    // console.log('tick: newRemainingTimeInMs', newRemainingTimeInMs);
+
+    if (remainingTimeInMs < 0) {
+      pauseCountDown();
+      stopCountDown();
+      return;
+    }
+
+    const shouldRun =
+      countDownInProgress &&
+      !countDownIsPaused &&
+      (endTimeInMs > 0 || remainingTimeInMs > 0);
+    if (!shouldRun) {
+      // console.log('Should NOT run.');
+      return;
+    }
+
+    const newTimeData = Object.assign({}, timeData, {
+      remainingTimeInMs: newRemainingTimeInMs,
+    });
+    setTimeData(newTimeData);
+  };
 
   const resumeCountDown = (): void => {
     const now = Date.now();
