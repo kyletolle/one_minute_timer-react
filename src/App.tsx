@@ -5,9 +5,8 @@
  * https://codeburst.io/lets-build-a-countdown-timer-with-react-part-1-2e7d5692d914
  */
 import { jsx } from '@emotion/react';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from '@emotion/styled';
-import TimerInput from './TimerInput';
 import Timer from './Timer';
 import StartButton from './StartButton';
 import PauseButton from './PauseButton';
@@ -15,110 +14,104 @@ import ResumeButton from './ResumeButton';
 import StopButton from './StopButton';
 import AppProps from './AppProps';
 
-const DOUBLE_ZEROS = '00';
-const INITIAL_MINUTES = '01';
-const INITIAL_SECONDS = DOUBLE_ZEROS;
 const INITIAL_COUNTDOWN_IN_PROGRESS = false;
 const INITIAL_COUNTDOWN_IS_PAUSED = false;
+const ONE_MINUTE_IN_MS = 60 * 1_000;
 
+/* First used the timer approach from
+ * https://yizhiyue.me/2019/12/08/how-to-create-a-simple-react-countdown-timer
+ * but now modifying it using another approach from
+ * https://medium.com/@peterjd42/building-timers-in-react-stopwatch-and-countdown-bc06486560a2
+ */
 const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
   const { className } = props;
-  const [minutesToStartWith, setMinutesToStartWith] = useState(INITIAL_MINUTES);
-  const [minutes, setMinutes] = useState(INITIAL_MINUTES);
-  const [seconds, setSeconds] = useState(INITIAL_SECONDS);
   const [countDownInProgress, setCountDownInProgress] = useState(
     INITIAL_COUNTDOWN_IN_PROGRESS,
   );
   const [countDownIsPaused, setCountDownIsPaused] = useState(
     INITIAL_COUNTDOWN_IS_PAUSED,
   );
-  const [secondsRemaining, setSecondsRemaining] = useState(0);
 
-  const showPauseButton = countDownInProgress && !countDownIsPaused;
-  const showResumeButton = countDownInProgress && countDownIsPaused;
+  const [timeData, setTimeData] = useState({
+    endTimeInMs: 0,
+    remainingTimeInMs: 0,
+  });
 
-  const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    const inputElement = event.target as HTMLInputElement;
-    const newMinutes = inputElement.value;
-    let minutesToSet;
-
-    if (Number(newMinutes) < 10) {
-      minutesToSet = `0${newMinutes}`;
-    } else {
-      minutesToSet = newMinutes;
-    }
-
-    setMinutesToStartWith(minutesToSet);
-    setMinutes(minutesToSet);
-  };
-
-  // Using timer approach from
-  // https://yizhiyue.me/2019/12/08/how-to-create-a-simple-react-countdown-timer
   useEffect(() => {
-    if (!countDownInProgress || countDownIsPaused) {
-      return;
-    }
+    const timerInterval = window.setInterval(() => {
+      const { endTimeInMs, remainingTimeInMs } = timeData;
+      console.log('tick: endTimeInMs', endTimeInMs);
+      console.log('tick: remainingTimeInMs', remainingTimeInMs);
+      const shouldRun =
+        countDownInProgress &&
+        !countDownIsPaused &&
+        (endTimeInMs !== 0 || remainingTimeInMs !== 0);
+      if (!shouldRun) {
+        console.log('Should NOT run.');
+        return;
+      }
 
-    const minutesNumber = Math.floor(secondsRemaining / 60);
-    const secondsNumber = secondsRemaining - minutesNumber * 60;
+      const newRemainingTimeInMs = endTimeInMs - Date.now();
+      console.log('tick: newRemainingTimeInMs', newRemainingTimeInMs);
 
-    // String conversion comes from https://stackoverflow.com/a/32607656/249218
-    let secondsString = String(secondsNumber);
-    if (secondsNumber < 10) {
-      secondsString = `0${secondsString}`;
-    }
+      const newTimeData = Object.assign({}, timeData, {
+        remainingTimeInMs: newRemainingTimeInMs,
+      });
+      setTimeData(newTimeData);
+    }, 500);
+    return () => clearInterval(timerInterval);
+  }, []);
 
-    let minutesString = String(minutesNumber);
-
-    if (minutesNumber < 10) {
-      minutesString = `0${minutesString}`;
-    }
-    setMinutes(minutesString);
-    setSeconds(secondsString);
-
-    if (countDownInProgress && secondsRemaining > 0) {
-      const timer = setInterval(tick, 1000);
-      return () => clearInterval(timer);
-    } else {
-      stopCountDown();
-    }
-  }, [countDownInProgress, countDownIsPaused, secondsRemaining]);
-
-  const tick = (): void => {
-    setSecondsRemaining(secondsRemaining - 1);
+  const resumeCountDown = (): void => {
+    setCountDownIsPaused(false);
   };
 
   const startCountDown = (): void => {
+    const now = Date.now();
+    const newEndTimeInMs = now + ONE_MINUTE_IN_MS;
+    const newTimeData = Object.assign({}, timeData, {
+      endTimeInMs: newEndTimeInMs,
+      remainingTimeInMs: ONE_MINUTE_IN_MS,
+      // timerInterval: startInterval(),
+    });
+    console.log('startCountDown: newTimeData', newTimeData);
+    setTimeData(newTimeData);
     setCountDownInProgress(true);
-    const time = Number(minutes);
-    const newSecondsRemaining = time * 60;
-    setSecondsRemaining(newSecondsRemaining);
+    setCountDownIsPaused(false);
   };
 
   const pauseCountDown = (): void => {
     setCountDownIsPaused(true);
   };
 
-  const resumeCountDown = (): void => {
-    setCountDownIsPaused(false);
-  };
-
   const stopCountDown = (): void => {
-    setSecondsRemaining(0);
-    setMinutes(minutesToStartWith);
-    setSeconds(INITIAL_SECONDS);
     setCountDownInProgress(INITIAL_COUNTDOWN_IN_PROGRESS);
     setCountDownIsPaused(INITIAL_COUNTDOWN_IS_PAUSED);
+    const newTimeData = Object.assign({}, timeData, {
+      endTimeInMs: 0,
+      remainingTimeInMs: 0,
+    });
+    setTimeData(newTimeData);
   };
+
+  const showPauseButton = countDownInProgress && !countDownIsPaused;
+  const showResumeButton = countDownInProgress && countDownIsPaused;
+
+  const { remainingTimeInMs } = timeData;
+  console.log('remainingTimeInMs during render', remainingTimeInMs);
+  const minutes = ('0' + (Math.floor(remainingTimeInMs / 60_000) % 60)).slice(
+    -2,
+  );
+  const seconds = ('0' + (Math.floor(remainingTimeInMs / 1000) % 60)).slice(-2);
 
   return (
     <div className={className}>
-      <TimerInput
+      {/* <TimerInput
         className={className}
         minutes={minutesToStartWith}
         handleChange={handleChange}
         disabled={countDownInProgress}
-      />
+      /> */}
       <Timer minutes={minutes} seconds={seconds} />
       <div>
         <StartButton className={className} handleClick={startCountDown} />
