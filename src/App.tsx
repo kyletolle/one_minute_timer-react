@@ -51,30 +51,39 @@ const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
         endTimeInMs,
         remainingTimeInMs,
       } = timeData;
-      console.log('tick: timeData', timeData);
+      // console.log('tick: timeData', timeData);
       // const shouldRun = true;
-      const shouldRun =
-        countDownInProgress &&
-        !countDownIsPaused &&
-        (endTimeInMs !== 0 || remainingTimeInMs !== 0);
-      if (!shouldRun) {
-        console.log('Should NOT run.');
+      const newRemainingTimeInMs = endTimeInMs - Date.now();
+      // console.log('tick: newRemainingTimeInMs', newRemainingTimeInMs);
+
+      if (remainingTimeInMs < 0) {
+        pauseCountDown();
+        stopCountDown();
         return;
       }
 
-      const newRemainingTimeInMs = endTimeInMs - Date.now();
-      console.log('tick: newRemainingTimeInMs', newRemainingTimeInMs);
+      const shouldRun =
+        countDownInProgress &&
+        !countDownIsPaused &&
+        (endTimeInMs > 0 || remainingTimeInMs > 0);
+      if (!shouldRun) {
+        // console.log('Should NOT run.');
+        return;
+      }
 
       const newTimeData = Object.assign({}, timeData, {
         remainingTimeInMs: newRemainingTimeInMs,
       });
       setTimeData(newTimeData);
-    }, 1000);
+    }, 25);
     return () => clearInterval(timerInterval);
   });
 
   const resumeCountDown = (): void => {
+    const now = Date.now();
+    const newEndTimeInMs = now + remainingTimeInMs;
     const newTimeData = Object.assign({}, timeData, {
+      endTimeInMs: newEndTimeInMs,
       countDownIsPaused: false,
     });
     setTimeData(newTimeData);
@@ -94,6 +103,7 @@ const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
   };
 
   const pauseCountDown = (): void => {
+    // TODO: Currently broken. We need to set a
     const newTimeData = Object.assign({}, timeData, {
       countDownIsPaused: true,
     });
@@ -110,7 +120,6 @@ const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
     setTimeData(newTimeData);
   };
 
-  console.log('render: timeData', timeData);
   const {
     countDownInProgress,
     countDownIsPaused,
@@ -119,10 +128,19 @@ const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
   const showPauseButton = countDownInProgress && !countDownIsPaused;
   const showResumeButton = countDownInProgress && countDownIsPaused;
 
-  const minutes = ('0' + (Math.floor(remainingTimeInMs / 60_000) % 60)).slice(
+  let remainingTimeToUse = remainingTimeInMs;
+  if (remainingTimeToUse < 0) {
+    remainingTimeToUse = ONE_MINUTE_IN_MS;
+  }
+  const minutes = ('0' + (Math.floor(remainingTimeToUse / 60_000) % 60)).slice(
     -2,
   );
-  const seconds = ('0' + (Math.floor(remainingTimeInMs / 1000) % 60)).slice(-2);
+  const seconds = ('0' + (Math.floor(remainingTimeToUse / 1000) % 60)).slice(
+    -2,
+  );
+  let centiseconds = ('0' + (Math.floor(remainingTimeToUse / 10) % 100)).slice(
+    -2,
+  );
 
   return (
     <div className={className}>
@@ -132,9 +150,16 @@ const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
         handleChange={handleChange}
         disabled={countDownInProgress}
       /> */}
-      <Timer minutes={minutes} seconds={seconds} />
+      <Timer
+        className={className}
+        minutes={minutes}
+        seconds={seconds}
+        centiseconds={centiseconds}
+      />
       <div>
-        <StartButton className={className} handleClick={startCountDown} />
+        {!countDownInProgress && (
+          <StartButton className={className} handleClick={startCountDown} />
+        )}
         <PauseButton
           className={className}
           visible={showPauseButton}
@@ -145,7 +170,9 @@ const UnstyledApp: React.FC<AppProps> = (props: AppProps) => {
           visible={showResumeButton}
           handleClick={resumeCountDown}
         />
-        <StopButton className={className} handleClick={stopCountDown} />
+        {countDownInProgress && (
+          <StopButton className={className} handleClick={stopCountDown} />
+        )}
       </div>
     </div>
   );

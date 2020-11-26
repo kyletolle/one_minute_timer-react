@@ -25,7 +25,6 @@ UnstyledPauseButton.propTypes = {
 };
 
 const PauseButton = styled(UnstyledPauseButton)`
-  margin-left: 3em;
   button {
     font-size: 3em;
   }
